@@ -413,6 +413,9 @@ body.archive-body {
         repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px);
     background-attachment: fixed;
     animation: fadeInCaseboard 1.5s ease-in;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
 }
 
 /* Chat container scrolling for dashboard */
@@ -442,7 +445,7 @@ body.archive-body {
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 40px 20px 100px 20px;
     color: var(--color-text-main);
     font-family: var(--font-sans);
     position: relative;
