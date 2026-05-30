@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS SYSTEM - ARCHIVE RECOVERY</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+</head>
+<body>
+    
+    <!-- Glitch Overlay -->
+    <div id="glitch-overlay">FILE_008</div>
+    
+    <!-- Audio element for rain -->
+    <audio id="rain-audio" loop>
+        <source src="https://actions.google.com/sounds/v1/weather/rain_on_roof.ogg" type="audio/ogg">
+    </audio>
+
+    <!-- Initial Interaction Block to allow audio playback -->
+    <div id="start-screen" class="screen active">
+        <button id="start-btn">[ DECRYPT FILE ]</button>
+    </div>
+
+    <!-- Cinematic Intro -->
+    <div id="intro-screen" class="screen">
+        <div class="intro-content">
+            <h1 id="case-title" class="hidden">CASE #008</h1>
+            <p id="case-suicide" class="hidden"><span>Official Cause of Death: Suicide</span></p>
+            <p id="case-murder" class="hidden typewriter">Correction:<br>Murder</p>
+        </div>
+    </div>
+
+    <!-- Chat / Login Sequence -->
+    <div id="chat-screen" class="screen">
+        <div id="chat-container">
+            <div id="chat-messages">
+                <div id="wrap-1" class="story-wrapper">
+                    <div class="story-inner">
+                        <div class="story-text"><span class="maya-name">Maya:</span> <i>You came.</i></div>
+                    </div>
+                </div>
+                <div id="wrap-2" class="story-wrapper">
+                    <div class="story-inner">
+                        <div class="story-text"><span class="maya-name">Maya:</span> <i>Good.</i></div>
+                    </div>
+                </div>
+                <div id="wrap-3" class="story-wrapper">
+                    <div class="story-inner">
+                        <div class="story-text"><span class="maya-name">Maya:</span> <i>I wasn't sure you would.</i></div>
+                    </div>
+                </div>
+                <div id="wrap-3-1" class="story-wrapper">
+                    <div class="story-inner">
+                        <div class="story-text"><span class="maya-name">Maya:</span> <i>Actually...</i></div>
+                    </div>
+                </div>
+                <div id="wrap-3-2" class="story-wrapper">
+                    <div class="story-inner">
+                        <div class="story-text"><span class="maya-name">Maya:</span> <i>That's a lie.</i></div>
+                    </div>
+                </div>
+                <div id="wrap-3-3" class="story-wrapper">
+                    <div class="story-inner">
+                        <div class="story-text"><span class="maya-name">Maya:</span> <i>I knew you would.</i></div>
+                    </div>
+                </div>
+                <div id="wrap-4" class="story-wrapper">
+                    <div class="story-inner">
+                        <div class="story-text" style="color: var(--color-terminal); font-family: var(--font-typewriter); text-transform: uppercase;">Access Granted</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Name Input Form -->
+            <div id="wrap-name" class="story-wrapper">
+                <div class="story-inner">
+                    <form id="name-form" class="chat-form" novalidate autocomplete="off">
+                        <label for="name-input">Identify Yourself</label>
+                        <input type="text" id="name-input" placeholder="" required>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Password Input Form -->
+            <div id="wrap-password" class="story-wrapper">
+                <div class="story-inner">
+                    <form id="password-form" class="chat-form" novalidate>
+                        <label for="password-input">PROVE IT</label>
+                        <input type="password" id="password-input" placeholder="" required>
+                        <div class="error-msg" id="login-error"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

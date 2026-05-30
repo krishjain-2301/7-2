@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS // CASE #008</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="archive-body">
+    <!-- Hidden Clue -->
+    <div class="hidden-clue">don't leave</div>
+
+    <div id="caseboard-container">
+        <!-- Header -->
+        <header class="case-header">
+            <h1 class="case-title stamp-effect">CASE #008</h1>
+            <div class="case-meta-grid">
+                <div class="meta-column">
+                    <span>Status: <span class="highlight-green">OPEN</span></span>
+                    <span>Official Cause: <span class="highlight-red">SUICIDE</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Recovered from: <span class="highlight-terminal">MAYA VERMA'S LAPTOP</span></span>
+                    <span>Recovery Status: <span class="highlight-red">PARTIAL</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Last User: <span class="highlight-terminal">MAYA VERMA</span></span>
+                    <span>Last Login: <span class="highlight-terminal">143 Days Ago</span></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Subheader -->
+        <h2 class="section-title">Recovered Files</h2>
+
+        <div class="warning-message">
+            <strong>WARNING</strong><br>
+            Recovered files may contain corrupted memory fragments.<br>
+            Proceed with caution.
+        </div>
+
+        <!-- Evidence Grid -->
+        <div class="evidence-grid">
+            <div class="evidence-item file-card" id="btn-diary">
+                <span class="icon">📄</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_001.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card corrupted" id="btn-photo" title="Right-click to download and analyze">
+                <span class="icon">🖼</span>
+                <div class="file-details">
+                    <span class="filename">IMG_1038.jp_</span>
+                    <span class="file-meta highlight-red">[CORRUPTED]</span>
+                    <span style="font-size: 0.65rem; color: #888; margin-top: 6px; font-family: sans-serif; letter-spacing: 0.5px;">ACTION: Download to investigate</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card encrypted" id="btn-aryan">
+                <span class="icon">📁</span>
+                <div class="file-details">
+                    <span class="filename">Aryan</span>
+                    <span class="file-meta highlight-terminal">Encrypted</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-diary2" style="display: none;">
+                <span class="icon">📄</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_002.txt</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investigation Quiz -->
+        <div id="investigation-quiz" class="investigation-quiz">
+            <label for="investigation-input" class="quiz-label">Who was Maya investigating?</label>
+            <div class="input-row">
+                <input type="text" id="investigation-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="_">
+                <button id="submit-investigation" class="terminal-btn">SUBMIT</button>
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
+
+        <!-- File Status Footer -->
+        <footer class="file-status-footer" id="case-footer">
+            <div style="display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%;">
+                <div class="status-box recovered">
+                    <span>RECOVERED FILES:</span>
+                    <span class="count" id="count-recovered">3</span>
+                </div>
+                <div class="status-box locked">
+                    <span style="color: var(--color-blood);">LOCKED FILES:</span>
+                    <span class="count" id="count-locked" style="color: var(--color-blood);">7</span>
+                </div>
+                <div class="status-box next-recovery" id="next-recovery-box"
+                    style="display: none; border-left: 1px solid #333; padding-left: 40px; margin-left: 20px;">
+                    <span style="color: #666;">NEXT RECOVERY:</span>
+                    <span class="highlight-red"
+                        style="font-weight: bold; cursor: not-allowed; opacity: 0.5;">OLIVIA</span>
+                    <span style="color: var(--color-blood); font-size: 0.8rem; margin-left: 10px;">[LOCKED]</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Diary Modal -->
+    <div id="modal-diary" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal">&times;</button>
+            <div class="diary-text">
+                <h3>October 11</h3>
+                <p>I think I'm making a mistake.</p>
+                <p>If you're reading this, then I was right.</p>
+                <p>Or dead.</p>
+                <p>Hopefully the first one.</p>
+                <p>I started keeping records today.</p>
+                <br>
+                <p>I locked everything in the Confidential archive.</p>
+                <p>The key is still there.</p>
+                <p>I just made sure nobody would notice it.</p>
+                <br>
+                <p>People forget.</p>
+                <p>People change details.</p>
+                <p>He's smiling in that photo.</p>
+                <p>Aryan was the first.</p>
+                <p>He keeps saying nothing happened.</p>
+                <p>But every time I look at him, I feel like I'm missing something.</p>
+                <p>I hope I am.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Modal -->
+    <div id="modal-photo" class="modal">
+        <div class="modal-content photo-content">
+            <button class="close-modal">&times;</button>
+            <div class="photo-wrapper">
+                <img src="group_photo.png" alt="Group Photo" class="group-photo">
+            </div>
+        </div>
+    </div>
+
+    <!-- Aryan Folder Explorer Modal -->
+    <div id="modal-aryan" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Aryan/</h2>
+            </div>
+            <div class="explorer-grid">
+                <div class="explorer-item" id="btn-chat-export">
+                    <span class="icon">💬</span>
+                    <span class="filename">Messages (Unknown)</span>
+                </div>
+                <div class="explorer-item" id="btn-fcrack">
+                    <span class="icon">📦</span>
+                    <span class="filename">Confidential.zip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Export Modal -->
+    <div id="modal-chat-export" class="modal">
+        <div class="modal-content chat-content instagram-dm">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar"></div>
+                <div class="dm-info">
+                    <h2>Unknown</h2>
+                    <span class="dm-status"></span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble received">
+                    <span class="text">He asked you for help.</span>
+                </div>
+                <div class="dm-bubble sent">
+                    <span class="text">Stop.</span>
+                </div>
+                <div class="dm-bubble received">
+                    <span class="text">You saw what was happening.</span>
+                </div>
+                <div class="dm-bubble sent">
+                    <span class="text">I didn't do anything.</span>
+                </div>
+                <div class="dm-bubble received">
+                    <span class="text">Exactly.</span>
+                </div>
+                <div class="dm-bubble received">
+                    <span class="text">He trusted you.</span>
+                </div>
+                <div class="dm-bubble sent">
+                    <span class="text">Leave me alone.</span>
+                </div>
+                <div class="dm-bubble received">
+                    <span class="text">You already left him alone.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diary 2 Modal (Hidden initially) -->
+    <div id="modal-diary2" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal" id="diary2-close-btn">&times;</button>
+            <div class="diary-text">
+                <h3>October 13</h3>
+                <p>I found the report.</p>
+                <p>I wish I hadn't.</p>
+                <br>
+                <p>Everybody keeps calling it suicide.</p>
+                <p>But it doesn't feel like suicide.</p>
+                <p>It feels like something slower.</p>
+                <p>Something that took months.</p>
+                <br>
+                <p>Maybe nobody pushed him.</p>
+                <p>Maybe they just watched.</p>
+                <p>Aryan keeps saying he wasn't responsible.</p>
+                <p>Maybe he's right.</p>
+                <p>Maybe he never touched him.</p>
+                <p>But every witness keeps saying the same thing.</p>
+                <p>Nobody wanted to be next.</p>
+                <p>I don't think he believes that anymore.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Summary Modal -->
+    <div id="modal-summary" class="modal" style="z-index: 10000;">
+        <div class="modal-content"
+            style="background: #000; border: 1px solid var(--color-blood); max-width: 600px; padding: 40px; text-align: left; font-family: var(--font-typewriter); color: #fff;">
+            <button class="close-modal" id="summary-close-btn">&times;</button>
+            <h2 id="summary-subject"
+                style="color: var(--color-blood); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
+                SUBJECT: [REDACTED]</h2>
+            <h3 id="summary-classification" style="color: #888; margin-bottom: 30px;">CLASSIFICATION: [REDACTED]</h3>
+            <div style="font-size: 1.1rem; line-height: 1.8;">
+                <span style="color: #555; text-transform: uppercase;">Findings:</span><br><br>
+                > Ignored repeated warnings.<br>
+                > Abandoned former friend.<br>
+                > Refused responsibility.<br>
+                <br>
+                <span style="color: var(--color-terminal);">> Psychological harm contributed to subject death.</span>
+            </div>
+            <div id="case-confirm-btn"
+                style="margin-top: 40px; text-align: center; border: 1px solid var(--color-blood); color: var(--color-blood); padding: 10px; font-weight: bold; letter-spacing: 2px; cursor: pointer; transition: all 0.3s;"
+                onmouseover="this.style.background='var(--color-blood)'; this.style.color='#000';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--color-blood)';">
+                CASE CONFIRMED
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Prompt Modal -->
+    <div id="modal-password" class="modal">
+        <div class="modal-content password-prompt-content fullscreen-prompt">
+            <button class="close-modal">&times;</button>
+            <h2 class="confidential-title">Confidential.zip</h2>
+            <div style="margin: 20px 0; color: #666; font-family: var(--font-typewriter); font-size: 0.9rem;">
+                SYS_NOTE: FILE ENCRYPTION PROTOCOL SET TO <strong
+                    style="color: #888;">AUTH{SUBJECT-NAME_CLASSIFICATION}</strong>
+            </div>
+            <div class="password-input-wrapper">
+                <input type="text" id="key-password-input" autocomplete="off" spellcheck="false"
+                    placeholder="ENTER PASSWORD">
+                <button id="key-submit-btn">UNLOCK</button>
+            </div>
+            <div id="password-error"></div>
+        </div>
+    </div>
+
+    <!-- Inside FCRACK Modal -->
+    <div id="modal-fcrack-contents" class="modal">
+        <div class="modal-content fcrack-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Confidential/</h2>
+            </div>
+            <div class="fcrack-grid">
+                <!-- ROW 1 -->
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content"
+                        style="font-size: 0.85rem; background: #fff; color: #000; font-family: 'Times New Roman', serif;">
+                        <strong
+                            style="font-size: 1.1rem; border-bottom: 2px solid #000; display: block; padding-bottom: 5px; margin-bottom: 10px;">ASHWOOD
+                            UNIVERSITY - STUDENT INCIDENT REPORT</strong>
+                        CASE ID: 17-031<br>
+                        STATUS: CLOSED<br><br>
+                        SUMMARY:<br>
+                        Student reported repeated harassment.<br>
+                        Student claimed multiple students were being manipulated against him.<br>
+                        Student reported multiple former friends suddenly cutting contact.<br>
+                        Student reported increasing social isolation.<br>
+                        Student reported severe emotional distress.<br>
+                        Report closed after subject death.<br><br>
+                        Cause of Death: <strong>Suicide</strong><br><br>
+                        Witness of Interest: <strong>ARYAN S.</strong>
+                    </div>
+                    <span class="filename">incident_report.pdf</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background: #e8e8e8; color: #333; font-family: sans-serif; font-size: 0.85rem; border-top: 3px solid #666;">
+                        <strong>DISCIPLINARY RECORD</strong><br><br>
+                        Subject:<br>Aryan Sharma<br><br>
+                        Statement:<br>
+                        Student reported rumors being spread following an interpersonal dispute.<br><br>
+                        Student denied involvement.<br><br>
+                        Multiple witnesses refused to testify.<br><br>
+                        Case closed.<br><br>
+                        <span style="color: red; text-decoration: underline; font-size: 0.75rem; display: block; margin-top: 20px;">[Attachment Missing: Witness Statement]</span>
+                    </div>
+                    <span class="filename">disciplinary_hearing.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background: #111; border: 1px solid #333; font-size: 0.9rem;">
+                        <span style="color: red; font-size: 0.7rem; border-bottom: 1px solid #333; display: block; margin-bottom: 15px;">DRAFT - NEVER SENT</span>
+                        Aryan,<br><br>
+                        I found the statement.<br>
+                        I know why nobody talks about him.<br>
+                        I know why you're pretending.<br><br>
+                        Pretending doesn't change what happened.<br><br>
+                        - Maya
+                    </div>
+                    <span class="filename">deleted_message.txt</span>
+                </div>
+
+                <!-- ROW 2 -->
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background: #fff; color: #000; font-family: 'Courier New', Courier, monospace; font-size: 0.95rem; line-height: 1.5; padding: 25px;">
+                        <strong style="border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 15px; display: block;">WITNESS_STATEMENT.TXT</strong>
+                        I didn't want to report this.<br><br>
+                        Aryan was cheating on his girlfriend.<br>
+                        Everybody knew.<br>
+                        Nobody said anything.<br><br>
+                        One person did.<br>
+                        A first year student.<br><br>
+                        After that everything changed.<br>
+                        People stopped talking to him.<br>
+                        People laughed when he walked by.<br><br>
+                        Aryan never touched him.<br>
+                        He didn't have to.<br>
+                        He just watched.
+                    </div>
+                    <span class="filename">witness_statement.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="font-family: 'Courier New', Courier, monospace; color: #888;">
+                        Maybe I'm crazy.<br><br>
+                        Because nobody else remembers what happened.<br><br>
+                        Or maybe nobody wants to.<br><br>
+                        Now it hurts.
+                    </div>
+                    <span class="filename">voice_note_transcript.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <img src="boat_house.png" alt="boat house" class="boathouse-img" style="margin-bottom: 15px; width: 100%; border: 1px solid #333;">
+                    <div class="txt-content" style="background: transparent; border: none; font-size: 0.85rem; font-style: italic; color: #aaa; text-align: center; padding: 0;">
+                        11:48 PM<br><br>
+                        He wasn't supposed to be there.<br>
+                        Neither was I.<br><br>
+                        Nobody talks about that night anymore.
+                    </div>
+                    <span class="filename">boat_house.png</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End of Chapter Sequence Overlay -->
+    <div id="end-chapter-overlay" class="screen cut-screen" style="display:none; z-index: 20000;">
+        <div id="sequence-text" class="terminal-sequence"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="caseboard.js"></script>
+
+    <!-- HE WASN'T THE FIRST -->
+</body>
+
+</html>

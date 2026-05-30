@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASE #008 - OSIRIS</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    
+    <!-- Typewriter Audio -->
+    <audio id="typewriter-audio" loop>
+        <source src="https://actions.google.com/sounds/v1/office/keyboard_typing.ogg" type="audio/ogg">
+    </audio>
+
+    <!-- Autoplay Bypass Overlay -->
+    <div id="click-to-start" class="screen active" style="z-index: 10000; background: #000; cursor: pointer; flex-direction: column;">
+        <div style="font-family: var(--font-typewriter); color: var(--color-terminal); font-size: 1.5rem; letter-spacing: 4px; text-transform: uppercase;">[ CLICK TO DECRYPT FILE ]</div>
+    </div>
+
+    <!-- Audio Log Screen -->
+    <div id="audio-log-screen" class="screen black-screen active">
+        <div id="chat-container">
+            <div id="typewriter-container" style="font-family: var(--font-typewriter); color: var(--color-text-main); font-size: 1.5rem; line-height: 2; white-space: pre-wrap; margin-bottom: 30px; text-align: left;"></div>
+            <div style="text-align: center;">
+                <button id="access-files-btn" style="display: none; opacity: 0; transition: opacity 1s ease;">[ ACCESS CASE FILES ]</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Placeholder -->
+    <div id="dashboard-screen" class="screen cut-screen">
+        <h1 style="font-family: var(--font-sans); color: #fff; letter-spacing: 2px;">OSIRIS DATABASE v4.2 // DASHBOARD</h1>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
