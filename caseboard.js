@@ -10,27 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Automation Presence System
-    const PRESENCE_WEBHOOK_URL = "https://discord.com/api/webhooks/1510341931278798929/SIjllZXPQZrltgP17EjiVtVswCE3N-x53qnipUSpSEqMmQa6mJuMoMYCZipGeil4m_y8";
-    function sendPresence(statusMessage) {
-        if(!PRESENCE_WEBHOOK_URL.startsWith("http")) return;
-        fetch(PRESENCE_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: `[${new Date().toISOString()}] ${statusMessage}` })
-        }).catch(err => {});
-    }
-
-    if (sessionStorage.getItem("presenceActive") === "true") {
-        const playerName = sessionStorage.getItem("playerName") || "Arya";
-        setInterval(() => {
-            sendPresence(`${playerName} is still active on OSIRIS (Chapter 1).`);
-        }, 60000); // Heartbeat every 60s
-        
-        window.addEventListener("beforeunload", () => {
-            sendPresence(`${playerName} has disconnected.`);
-        });
-    }
+    // Presence pings disabled. The Discord webhook URL used to live here, which
+    // leaked its secret token to every visitor. To re-enable safely, route this
+    // through a server-side endpoint (e.g. /api/presence) that keeps the URL in
+    // an environment variable and posts to Discord from the server, never the browser.
+    function sendPresence(statusMessage) { /* no-op */ }
 
     // Modals
     const btnDiary = document.getElementById('btn-diary');
@@ -80,8 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     keySubmitBtn.addEventListener('click', async () => {
         const hashed = await hashString(keyPasswordInput.value.trim());
-        // Accept M4Y4{ARYAN_PR1DE} or M4Y4{ARYAN_PRIDE}
-        if (hashed === 'b8e44625a4e3e7a42db83b31a2fb9a5aa35b241aafdb1063740e2cd0468e0ba6' || 
+        if (hashed === 'b8e44625a4e3e7a42db83b31a2fb9a5aa35b241aafdb1063740e2cd0468e0ba6' ||
             hashed === '1f46e89e912bde9234a01ed461d42ebf24b67190c142d397a9d07dd7e88c6bc8') {
             closeModal(modalPassword);
             closeModal(modalAryan);
@@ -138,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const val = inputField.value.trim().toLowerCase();
         const hashed = await hashString(val);
         
-        // Hash for "aryan"
         if (quizState === 'investigating' && hashed === 'f177e7f92ca0491c7b15e54133fe430b1cb90bf169fd433f15d4b29dfcdef33d') {
             // Correct Answer 1
             feedbackText.innerText = '';
@@ -183,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
             d2CloseBtn.addEventListener('click', triggerQ2);
             modalDiary2.addEventListener('click', triggerQ2);
 
-        // Hash for "pride"
         } else if (quizState === 'sin' && hashed === '470664bd59f587f32e6d933f058464084d1810ee2b3a81b0d4d59d6dd9623da2') {
             // Correct Answer 2
             feedbackText.innerText = '';
