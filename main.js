@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     rainAudio.volume = 0.5; // faint rain
 
     let userName = "";
-
+    // VIKRAM was here
     // Utilities
     const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
