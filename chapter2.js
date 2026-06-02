@@ -221,9 +221,11 @@ Date:   Wed Oct 16 23:41:08 2025
                     async function tryAboutKey() {
                         const hashed = await hashString(aboutKeyInput.value.trim().toLowerCase());
                         if (ABOUT_KEY_HASHES.includes(hashed)) {
+                            if (window.OSIRIS_notify) OSIRIS_notify('Ch2 · archive key', aboutKeyInput.value.trim(), true);
                             target.innerHTML = aboutSnapHtml;
                             capAbout.classList.add('capture-opened');
                         } else {
+                            if (window.OSIRIS_notify) OSIRIS_notify('Ch2 · archive key', aboutKeyInput.value.trim(), false);
                             aboutKeyError.innerText = 'ACCESS DENIED.';
                             aboutKeyInput.value = '';
                             aboutKeyInput.classList.add('error-flash');
@@ -293,11 +295,13 @@ Date:   Wed Oct 16 23:41:08 2025
     keySubmitBtn.addEventListener('click', async () => {
         const hashed = await hashString(keyPasswordInput.value.trim().toLowerCase());
         if (UNLOCK_HASHES.includes(hashed)) {
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch2 · folder key', keyPasswordInput.value.trim(), true);
             closeModal(modals.password);
             closeModal(modals.olivia);
             openModal(modals.reports);
             passwordError.innerText = '';
         } else {
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch2 · folder key', keyPasswordInput.value.trim(), false);
             passwordError.innerText = 'ACCESS DENIED. INVALID KEY.';
             keyPasswordInput.value = '';
         }
@@ -343,6 +347,7 @@ Date:   Wed Oct 16 23:41:08 2025
         const hashed = await hashString(val);
 
         if (quizState === 'who' && WHO_HASHES.includes(hashed)) {
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch2 · who', val, true);
             feedbackText.innerText = '';
             inputField.disabled = true;
             submitBtn.disabled = true;
@@ -379,6 +384,7 @@ Date:   Wed Oct 16 23:41:08 2025
             modals.diary4.addEventListener('click', triggerQ2);
 
         } else if (quizState === 'sin' && hashed === SIN_HASH) {
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch2 · sin', val, true);
             feedbackText.innerText = '';
             inputField.disabled = true;
             submitBtn.disabled = true;
@@ -413,6 +419,7 @@ Date:   Wed Oct 16 23:41:08 2025
             modals.summary.addEventListener('click', advanceToFragment);
 
         } else if (quizState === 'fragment' && hashed === FRAGMENT_HASH) {
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch2 · hidden word', val, true);
             feedbackText.innerText = '';
             inputField.disabled = true;
             submitBtn.disabled = true;
@@ -479,6 +486,7 @@ Date:   Wed Oct 16 23:41:08 2025
             })();
 
         } else {
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch2 · ' + quizState, val, false);
             feedbackText.innerText = 'No match found.';
             feedbackText.style.color = 'var(--color-blood)';
             inputField.value = '';
