@@ -16,6 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // an environment variable and posts to Discord from the server, never the browser.
     function sendPresence(statusMessage) { /* no-op */ }
 
+    // ---- Cross-chapter fragment store (Maya's 7-word hidden message) ----
+    // Each sin-chapter contributes one word; assembled in Chapter 8.
+    // 1:WE  2:ALL  3:WATCHED  4:HER  5:DROWN  6:THAT  7:NIGHT
+    function addFragment(n, word) {
+        let f = {};
+        try { f = JSON.parse(localStorage.getItem('osiris_fragments') || '{}'); } catch (e) { f = {}; }
+        f[n] = word;
+        localStorage.setItem('osiris_fragments', JSON.stringify(f));
+        return f;
+    }
+
     // Modals
     const btnDiary = document.getElementById('btn-diary');
     const btnPhoto = document.getElementById('btn-photo');
@@ -109,6 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('end-chapter-overlay');
     const sequenceText = document.getElementById('sequence-text');
 
+    // Assigned when the sin is answered; invoked after the hidden-fragment (Q3) is solved.
+    let runEnding = null;
+
     inputField.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             submitBtn.click();
@@ -181,12 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const sumCloseBtn = document.getElementById('summary-close-btn');
             const caseConfirmBtn = document.getElementById('case-confirm-btn');
             
-            async function triggerEnding(e) {
-                if (e.currentTarget === sumCloseBtn || e.currentTarget === caseConfirmBtn || e.target === modalSummary) {
-                    sumCloseBtn.removeEventListener('click', triggerEnding);
-                    caseConfirmBtn.removeEventListener('click', triggerEnding);
-                    modalSummary.removeEventListener('click', triggerEnding);
-                    
+            runEnding = async function () {
+                {
                     overlay.style.display = 'flex';
                     overlay.classList.add('active');
                 
@@ -198,6 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     sequenceText.innerHTML = '<div class="locked-state" style="line-height: 2;"><p style="color:#333;">────────────────────────────</p><h2 style="color:#888;">Maya left 7 names.</h2><h2 class="highlight-green">You recovered 1.</h2><h2 class="highlight-red">6 remain.</h2><p style="color:#333;">────────────────────────────</p></div>';
                     await delay(3000);
+
+                    // Meta-puzzle fragment reveal
+                    addFragment(1, 'WE');
+                    let frags = {};
+                    try { frags = JSON.parse(localStorage.getItem('osiris_fragments') || '{}'); } catch (e) { frags = {}; }
+                    const fragCount = Object.keys(frags).length;
+                    sequenceText.innerHTML = `
+                        <div class="locked-state">
+                            <p style="color:#888; text-transform:uppercase; letter-spacing:2px;">Hidden fragment recovered</p>
+                            <h1 class="highlight-terminal" style="font-size:3rem; letter-spacing:6px; text-shadow:0 0 20px rgba(74,246,38,0.4);">WE</h1>
+                            <p style="color:#666; font-family:monospace;">FRAGMENT 01 / 07</p>
+                            <p style="color:#888; font-family:monospace; margin-top:10px;">MESSAGE FRAGMENTS COLLECTED: ${fragCount} / 7</p>
+                            <p style="color:#555; max-width:460px; margin-top:18px; line-height:1.6;">Maya buried one word in every case. Seven words. One message. Keep them.</p>
+                        </div>`;
+                    await delay(4500);
 
                     document.body.classList.add('glitch-active');
                     sequenceText.innerHTML = '<div class="locked-state"><h2 class="highlight-terminal">RECOVERING NEXT SUBJECT...</h2><br><p style="font-family: monospace; color:#555; font-size: 1.2rem; margin: 20px 0;">[██████░░░░░░░░░░░░] 31%</p><div style="color:#888; text-align: left; display: inline-block; line-height: 1.6; font-size: 1.1rem;">Name Found:<br><span class="highlight-red" style="font-size:1.3rem; font-weight:bold;">OLIVIA</span><br><br>Memory Integrity:<br><span style="color:#ff4444">12%</span><br><br>Status:<br><span class="highlight-red" style="font-weight:bold; letter-spacing: 2px;">CORRUPTED</span></div></div>';
@@ -211,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     sequenceText.innerHTML = `
                         <div class="locked-state">
                             <h2 class="highlight-red" style="font-size: 2.2rem; letter-spacing: 4px;">NEXT RECOVERY:<br>OLIVIA</h2>
+                            <a href="chapter2.html" class="terminal-btn" style="margin-top: 30px; text-decoration: none; display: inline-block;">[ DECRYPT OLIVIA ]</a>
                         </div>
                     `;
                     
@@ -233,11 +259,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>`;
                     }, 4000);
                 }
+            };
+
+            function advanceToFragment(e) {
+                if (e.currentTarget === sumCloseBtn || e.currentTarget === caseConfirmBtn || e.target === modalSummary) {
+                    sumCloseBtn.removeEventListener('click', advanceToFragment);
+                    caseConfirmBtn.removeEventListener('click', advanceToFragment);
+                    modalSummary.removeEventListener('click', advanceToFragment);
+                    closeModal(modalSummary);
+
+                    quizState = 'fragment';
+                    document.querySelector('.quiz-label').innerHTML =
+                        '<span class="highlight-terminal">CLASSIFICATION LOGGED.</span><br><br>' +
+                        'Maya hid one word where the ink doesn\'t show — for whoever came looking.<br>' +
+                        '<span style="color:#888; font-size:0.9rem;">Open Maya_Diary_002 again. Don\'t leave any blank space alone.</span>';
+                    inputField.value = '';
+                    inputField.disabled = false;
+                    submitBtn.disabled = false;
+                    inputField.focus();
+                    document.getElementById('investigation-quiz').scrollIntoView({ behavior: 'smooth' });
+                }
             }
-            
-            sumCloseBtn.addEventListener('click', triggerEnding);
-            caseConfirmBtn.addEventListener('click', triggerEnding);
-            modalSummary.addEventListener('click', triggerEnding);
+            sumCloseBtn.addEventListener('click', advanceToFragment);
+            caseConfirmBtn.addEventListener('click', advanceToFragment);
+            modalSummary.addEventListener('click', advanceToFragment);
+
+        } else if (quizState === 'fragment' && hashed === 'dc7c811b9561739d9b75bb3e9e1715970a868834e62251b0b9ca02e74d0f42c9') {
+            // Correct Answer 3 — hidden fragment: WE
+            feedbackText.innerText = '';
+            inputField.disabled = true;
+            submitBtn.disabled = true;
+            if (runEnding) runEnding();
 
         } else {
             // Wrong Answer

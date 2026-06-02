@@ -662,6 +662,13 @@ body.archive-body {
     line-height: 1.6;
 }
 
+/* Invisible ink — same colour as the diary paper, only visible when selected */
+.diary-text p.invisible-ink {
+    color: #f4ecd8;
+}
+.diary-text p.invisible-ink::selection { background: #2c2c2c; color: #f4ecd8; }
+.diary-text p.invisible-ink::-moz-selection { background: #2c2c2c; color: #f4ecd8; }
+
 /* Chat Log Content */
 .chat-content {
     background: #0a0a0a;
@@ -1120,4 +1127,256 @@ body.archive-body {
     color: var(--color-blood);
     margin-bottom: 30px;
     letter-spacing: 5px;
+}
+
+/* =========================================
+   OSINT TOOLKIT (Chapter 2)
+   ========================================= */
+.osint-content {
+    background: #0a0d0a;
+    border: 1px solid #1c3a1c;
+    width: 90vw;
+    max-width: 760px;
+}
+
+.osint-search-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.osint-search-row .terminal-input {
+    max-width: none;
+}
+
+.osint-results {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-family: var(--font-typewriter);
+}
+
+.osint-empty {
+    color: #777;
+    font-family: var(--font-typewriter);
+    padding: 10px 0;
+}
+
+.osint-hit {
+    border: 1px solid #2a2a2a;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 16px;
+    border-radius: 3px;
+    transition: all 0.25s ease;
+}
+
+.osint-hit.live {
+    cursor: pointer;
+    border-color: #1c3a1c;
+}
+
+.osint-hit.live:hover {
+    background: rgba(74, 246, 38, 0.05);
+    border-color: var(--color-terminal);
+}
+
+.osint-hit.private {
+    border-color: #4a3a10;
+}
+
+.osint-hit.dead {
+    opacity: 0.5;
+}
+
+.osint-hit-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.osint-plat {
+    color: #ddd;
+    font-size: 1rem;
+}
+
+.osint-handle {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.osint-status {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.osint-status.locked { color: #d6a52a; }
+.osint-status.open { color: var(--color-terminal); }
+.osint-status.gone { color: var(--color-blood); }
+
+.osint-note {
+    font-size: 0.85rem;
+    color: #999;
+    line-height: 1.5;
+}
+
+.osint-note em { color: #d6a52a; font-style: italic; }
+.osint-link { color: var(--color-terminal); }
+
+.devhub-detail {
+    margin-top: 14px;
+    border-top: 1px dashed #2a2a2a;
+    padding-top: 14px;
+}
+
+.repo-line {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.git-log {
+    background: #000;
+    border: 1px solid #222;
+    color: #9fe89f;
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    padding: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-bottom: 10px;
+}
+
+/* Web archive snapshot */
+.archive-snap {
+    border: 1px solid #2a2a2a;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.archive-bar {
+    background: #15171a;
+    color: #aaa;
+    font-family: monospace;
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.snap-profile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+}
+
+.snap-pfp {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #1f5e1f, #061306);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    border: 2px solid #2a4a2a;
+    flex-shrink: 0;
+}
+
+.snap-name { color: #fff; font-size: 1.05rem; }
+.snap-handle { color: #888; font-size: 0.85rem; margin: 2px 0; }
+.snap-bio { color: #aaa; font-size: 0.85rem; font-style: italic; }
+
+.snap-post {
+    border-top: 1px solid #2a2a2a;
+    padding: 16px 18px;
+}
+
+.snap-post-text { color: #ddd; font-size: 0.95rem; margin-bottom: 8px; }
+.snap-post-date { color: var(--color-blood); font-size: 0.78rem; }
+
+.archive-snap .osint-note { padding: 14px 18px; }
+
+/* Web archive — captured URL list */
+.archive-captures {
+    margin-top: 16px;
+    border: 1px solid #222;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 3px;
+    padding: 12px 14px;
+    font-family: monospace;
+    font-size: 0.82rem;
+}
+
+.archive-captures-head {
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.72rem;
+    margin-bottom: 10px;
+}
+
+.capture-row {
+    color: #9aa;
+    padding: 7px 8px;
+    border-top: 1px solid #1a1a1a;
+    word-break: break-all;
+}
+
+.capture-row .cap-meta { color: #5a5a5a; font-size: 0.75rem; }
+
+/* the deleted page is the only clickable row */
+.capture-row#cap-about {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.capture-row#cap-about:hover {
+    background: rgba(74, 246, 38, 0.06);
+    color: #cde;
+}
+
+.capture-row.capture-opened {
+    border-left: 2px solid var(--color-terminal);
+    background: rgba(74, 246, 38, 0.04);
+}
+
+/* Locked archive snapshot prompt */
+.archive-lock {
+    margin-top: 12px;
+    border: 1px solid #4a3a10;
+    background: rgba(74, 58, 16, 0.12);
+    border-radius: 3px;
+    padding: 16px;
+    font-family: var(--font-typewriter);
+}
+
+.archive-lock-head {
+    color: #d6a52a;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.archive-lock-q {
+    color: #ddd;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+
+.archive-lock-row {
+    display: flex;
+    gap: 10px;
+}
+
+#about-key-error {
+    color: var(--color-blood);
+    font-family: var(--font-typewriter);
+    font-size: 0.85rem;
+    min-height: 18px;
+    margin-top: 8px;
 }
