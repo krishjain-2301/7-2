@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS // CASE #008 - CH.02</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="archive-body">
+    <!-- Hidden Clue -->
+    <div class="hidden-clue">she reused the name</div>
+
+    <div id="caseboard-container">
+        <!-- Header -->
+        <header class="case-header">
+            <h1 class="case-title stamp-effect">CASE #008 // CH.02</h1>
+            <div class="case-meta-grid">
+                <div class="meta-column">
+                    <span>Subject: <span class="highlight-red">OLIVIA REED</span></span>
+                    <span>Status: <span class="highlight-green">OPEN</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Recovered from: <span class="highlight-terminal">MAYA VERMA'S LAPTOP</span></span>
+                    <span>Memory Integrity: <span class="highlight-red">12%</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Trigger: <span class="highlight-terminal">VIREO LABS INTERNSHIP</span></span>
+                    <span>Classification: <span class="highlight-red">[REDACTED]</span></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Subheader -->
+        <h2 class="section-title">Recovered Files</h2>
+
+        <div class="warning-message">
+            <strong>WARNING</strong><br>
+            Maya never learned who reported her.<br>
+            You have what she didn't: the trail. Trace it.
+        </div>
+
+        <!-- Evidence Grid -->
+        <div class="evidence-grid">
+            <div class="evidence-item file-card" id="btn-diary3">
+                <span class="icon">📄</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_003.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-offer">
+                <span class="icon">📜</span>
+                <div class="file-details">
+                    <span class="filename">internship_offer.pdf</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-withdrawn">
+                <span class="icon">✉️</span>
+                <div class="file-details">
+                    <span class="filename">offer_withdrawn.eml</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card corrupted" id="btn-portal-log">
+                <span class="icon">🗂</span>
+                <div class="file-details">
+                    <span class="filename">ethics_portal_log.txt</span>
+                    <span class="file-meta highlight-red">[LEAKED]</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card encrypted" id="btn-olivia">
+                <span class="icon">📁</span>
+                <div class="file-details">
+                    <span class="filename">Olivia</span>
+                    <span class="file-meta highlight-terminal">Encrypted</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-diary4" style="display: none;">
+                <span class="icon">📄</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_004.txt</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- OSINT Toolkit -->
+        <h2 class="section-title">OSINT Toolkit</h2>
+        <div class="warning-message" style="border-color:#444; background:rgba(255,255,255,0.03); color:#9a9a9a;">
+            The reports were filed under an alias. An alias is not anonymity.<br>
+            People reuse names. People forget what they posted. Find her.
+        </div>
+        <div class="evidence-grid">
+            <div class="evidence-item file-card" id="btn-lookup">
+                <span class="icon">🔎</span>
+                <div class="file-details">
+                    <span class="filename">username_lookup.exe</span>
+                    <span class="file-meta highlight-terminal">SEARCH ACROSS PLATFORMS</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-archive">
+                <span class="icon">🕰</span>
+                <div class="file-details">
+                    <span class="filename">web_archive.exe</span>
+                    <span class="file-meta highlight-terminal">RETRIEVE CACHED PAGES</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investigation Quiz -->
+        <div id="investigation-quiz" class="investigation-quiz">
+            <label for="investigation-input" class="quiz-label">Who filed the anonymous reports against Maya?</label>
+            <div class="input-row">
+                <input type="text" id="investigation-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="_">
+                <button id="submit-investigation" class="terminal-btn">SUBMIT</button>
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
+
+        <!-- File Status Footer -->
+        <footer class="file-status-footer" id="case-footer">
+            <div style="display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%;">
+                <div class="status-box recovered">
+                    <span>RECOVERED FILES:</span>
+                    <span class="count" id="count-recovered">4</span>
+                </div>
+                <div class="status-box locked">
+                    <span style="color: var(--color-blood);">LOCKED FILES:</span>
+                    <span class="count" id="count-locked" style="color: var(--color-blood);">6</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============ MODALS ============ -->
+
+    <!-- Diary 003 -->
+    <div id="modal-diary3" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal">&times;</button>
+            <div class="diary-text">
+                <h3>October 18</h3>
+                <p>I got it.</p>
+                <p>The internship at Vireo Labs.</p>
+                <p>The one I'd wanted since first year.</p>
+                <p>For six days I was the happiest I'd ever been.</p>
+                <br>
+                <p>Then the offer was pulled.</p>
+                <p><i>"Following concerns raised about applicant conduct."</i></p>
+                <p>I never did any of the things they listed.</p>
+                <br>
+                <p>Someone reported me. Three times. All anonymous.</p>
+                <p>They wouldn't tell me who.</p>
+                <p>I keep thinking about who hated me that much.</p>
+                <p>Olivia was the only one who stopped smiling when I told her the news.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offer Letter -->
+    <div id="modal-offer" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="txt-content"
+                style="background:#fff; color:#111; font-family:'Times New Roman', serif; padding:30px; line-height:1.6;">
+                <strong style="font-size:1.3rem; letter-spacing:2px;">VIREO LABS</strong>
+                <span style="display:block; color:#666; font-size:0.8rem; margin-bottom:20px;">RESEARCH &
+                    DEVELOPMENT</span>
+                <strong>OFFER OF INTERNSHIP</strong><br><br>
+                Dear Maya Verma,<br><br>
+                We are delighted to offer you the <strong>Summer Research Internship</strong> for the 2026 cohort.
+                Your application stood out among more than four hundred submissions.<br><br>
+                Start date: 02 June 2026<br>
+                Supervisor: Dr. A. Khan<br><br>
+                Please confirm your acceptance within 7 days.<br><br>
+                Congratulations,<br>
+                <i>Recruiting, Vireo Labs</i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offer Withdrawn -->
+    <div id="modal-withdrawn" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="txt-content"
+                style="background:#101418; border:1px solid #2a3138; color:#cdd3d8; font-family:var(--font-typewriter); padding:25px; line-height:1.7;">
+                <span style="color:#6b7780; font-size:0.8rem;">From: recruiting@vireolabs.com<br>
+                    To: maya.verma@ashwood.edu<br>
+                    Subject: Update regarding your internship offer</span>
+                <hr style="border-color:#222; margin:15px 0;">
+                Maya,<br><br>
+                Following <span class="highlight-red">concerns raised through our ethics portal</span> regarding
+                applicant conduct, we regret to inform you that your internship offer has been
+                <strong>withdrawn</strong>.<br><br>
+                We are unable to share the details or the source of these reports.<br><br>
+                We wish you the best in your future endeavours.<br><br>
+                <i>Recruiting, Vireo Labs</i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ethics Portal Log (THE SEED) -->
+    <div id="modal-portal-log" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="txt-content"
+                style="background:#000; border:1px solid #333; color:#9fe89f; font-family:monospace; padding:25px; line-height:1.8; font-size:0.95rem;">
+                <span style="color:#ff5555;">[ RECOVERED FRAGMENT — VIREO ETHICS PORTAL // INTERNAL ]</span><br><br>
+                RE: Applicant #4471 (M. VERMA)<br>
+                ---------------------------------------------<br>
+                Report #1 &nbsp; filed_by: <span class="highlight-terminal">vireo_truth</span> &nbsp; 2026-10-12<br>
+                Report #2 &nbsp; filed_by: <span class="highlight-terminal">vireo_truth</span> &nbsp; 2026-10-14<br>
+                Report #3 &nbsp; filed_by: <span class="highlight-terminal">vireo_truth</span> &nbsp; 2026-10-15<br>
+                ---------------------------------------------<br>
+                visibility: ANONYMOUS-TO-APPLICANT<br>
+                contact_alias: truthfor.vireo@proton.me<br>
+                <span style="color:#ff5555;">NOTE: identity withheld from applicant per policy.</span><br><br>
+                <span style="color:#666; font-size:0.8rem;">// the reporter chose a name. names can be
+                    followed.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diary 004 (hidden until gate 1) -->
+    <div id="modal-diary4" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal" id="diary4-close-btn">&times;</button>
+            <div class="diary-text">
+                <h3>October 21</h3>
+                <p>I found it.</p>
+                <p>The account that reported me.</p>
+                <p>It wasn't a stranger.</p>
+                <p>It was her.</p>
+                <br>
+                <p>She didn't want the job.</p>
+                <p>She never even applied.</p>
+                <p>She just wanted me to have nothing.</p>
+                <br>
+                <p>I used to think envy was wanting what someone else has.</p>
+                <p>It isn't.</p>
+                <p>It's hating that they have it at all.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OSINT: Username Lookup -->
+    <div id="modal-lookup" class="modal">
+        <div class="modal-content osint-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>🔎 username_lookup // cross-platform</h2>
+            </div>
+            <div class="osint-search-row">
+                <input type="text" id="lookup-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="enter username (no @)">
+                <button id="lookup-btn" class="terminal-btn">SEARCH</button>
+            </div>
+            <div id="lookup-results" class="osint-results"></div>
+        </div>
+    </div>
+
+    <!-- OSINT: Web Archive -->
+    <div id="modal-archive" class="modal">
+        <div class="modal-content osint-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>🕰 web_archive // cached snapshots</h2>
+            </div>
+            <div class="osint-search-row">
+                <input type="text" id="archive-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="enter handle or url">
+                <button id="archive-btn" class="terminal-btn">RETRIEVE</button>
+            </div>
+            <div id="archive-results" class="osint-results"></div>
+        </div>
+    </div>
+
+    <!-- Olivia Folder Explorer -->
+    <div id="modal-olivia" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Olivia/</h2>
+            </div>
+            <div class="explorer-grid">
+                <div class="explorer-item" id="btn-olivia-dm">
+                    <span class="icon">💬</span>
+                    <span class="filename">Messages (Unknown)</span>
+                </div>
+                <div class="explorer-item" id="btn-reports-zip">
+                    <span class="icon">📦</span>
+                    <span class="filename">Reports.zip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confrontation DM -->
+    <div id="modal-olivia-dm" class="modal">
+        <div class="modal-content chat-content instagram-dm">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar"></div>
+                <div class="dm-info">
+                    <h2>Unknown</h2>
+                    <span class="dm-status"></span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble received"><span class="text">You reported me.</span></div>
+                <div class="dm-bubble sent"><span class="text">I don't know what you mean.</span></div>
+                <div class="dm-bubble received"><span class="text">Three times. Same account.</span></div>
+                <div class="dm-bubble sent"><span class="text">You can't prove that was me.</span></div>
+                <div class="dm-bubble received"><span class="text">vireo_truth. I traced it.</span></div>
+                <div class="dm-bubble sent"><span class="text">...</span></div>
+                <div class="dm-bubble received"><span class="text">You didn't even want the internship.</span></div>
+                <div class="dm-bubble received"><span class="text">You just couldn't stand that I had it.</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports.zip Password Prompt -->
+    <div id="modal-password" class="modal">
+        <div class="modal-content password-prompt-content fullscreen-prompt">
+            <button class="close-modal">&times;</button>
+            <h2 class="confidential-title">Reports.zip</h2>
+            <div style="margin: 20px 0; color: #666; font-family: var(--font-typewriter); font-size: 0.9rem; max-width:600px; text-align:center;">
+                SYS_NOTE: DECRYPT KEY = <strong style="color:#888;">the real university username of the account that
+                    filed the reports</strong><br>
+                <span style="color:#555; font-size:0.8rem;">(the alias leaks it. follow the trail.)</span>
+            </div>
+            <div class="password-input-wrapper">
+                <input type="text" id="key-password-input" autocomplete="off" spellcheck="false"
+                    placeholder="ENTER KEY">
+                <button id="key-submit-btn">UNLOCK</button>
+            </div>
+            <div id="password-error"></div>
+        </div>
+    </div>
+
+    <!-- Reports.zip Contents -->
+    <div id="modal-reports-contents" class="modal">
+        <div class="modal-content fcrack-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Reports/</h2>
+            </div>
+            <div class="fcrack-grid">
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content"
+                        style="background:#fff; color:#000; font-family:'Times New Roman', serif; font-size:0.85rem;">
+                        <strong
+                            style="font-size:1.05rem; border-bottom:2px solid #000; display:block; padding-bottom:5px; margin-bottom:10px;">VIREO
+                            LABS — APPLICANT REVIEW</strong>
+                        Applicant: Maya Verma<br>
+                        Status: <strong>OFFER RESCINDED</strong><br><br>
+                        Basis: 3 anonymous integrity reports.<br>
+                        Independent verification: <strong style="color:#a00;">NONE</strong> (reporter anonymous).<br><br>
+                        Outcome: Offer withdrawn as a precaution pending review that never occurred.
+                    </div>
+                    <span class="filename">applicant_review.pdf</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#111; border:1px solid #333; font-size:0.9rem;">
+                        <span style="color:#ff5555; font-size:0.7rem; display:block; margin-bottom:12px;">THE THREE
+                            REPORTS</span>
+                        #1 — "Applicant misrepresented research she did not perform."<br><br>
+                        #2 — "Applicant has a prior conduct violation." <span style="color:#a00;">[no such record
+                            exists]</span><br><br>
+                        #3 — "Multiple students are uncomfortable working with her." <span style="color:#a00;">[no
+                            students named]</span><br><br>
+                        <span style="color:#666;">None substantiated. All anonymous. All from one account.</span>
+                    </div>
+                    <span class="filename">the_three_reports.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content"
+                        style="background:#0d0d0d; border:1px solid #333; color:#888; font-family:monospace;">
+                        She applied for nothing.<br>
+                        She wanted nothing.<br><br>
+                        She only filed when the offer became real.<br><br>
+                        Envy doesn't want the prize.<br>
+                        It wants the other person empty-handed.
+                    </div>
+                    <span class="filename">maya_notes.txt</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter Summary -->
+    <div id="modal-summary" class="modal" style="z-index: 10000;">
+        <div class="modal-content"
+            style="background:#000; border:1px solid var(--color-blood); max-width:600px; padding:40px; text-align:left; font-family:var(--font-typewriter); color:#fff;">
+            <button class="close-modal" id="summary-close-btn">&times;</button>
+            <h2 id="summary-subject"
+                style="color:var(--color-blood); border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">
+                SUBJECT: OLIVIA REED</h2>
+            <h3 id="summary-classification" style="color:#888; margin-bottom:30px;">CLASSIFICATION: ENVY</h3>
+            <div style="font-size:1.1rem; line-height:1.8;">
+                <span style="color:#555; text-transform:uppercase;">Findings:</span><br><br>
+                > Filed false anonymous reports.<br>
+                > Destroyed an opportunity she did not want.<br>
+                > Targeted a friend out of resentment.<br>
+                <br>
+                <span style="color:var(--color-terminal);">> Maya's offer withdrawn. Reputation damaged.</span>
+            </div>
+            <div id="case-confirm-btn"
+                style="margin-top:40px; text-align:center; border:1px solid var(--color-blood); color:var(--color-blood); padding:10px; font-weight:bold; letter-spacing:2px; cursor:pointer; transition:all 0.3s;"
+                onmouseover="this.style.background='var(--color-blood)'; this.style.color='#000';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--color-blood)';">
+                CASE CONFIRMED
+            </div>
+        </div>
+    </div>
+
+    <!-- End of Chapter Sequence Overlay -->
+    <div id="end-chapter-overlay" class="screen cut-screen" style="display:none; z-index: 20000;">
+        <div id="sequence-text" class="terminal-sequence"></div>
+    </div>
+
+    <script src="chapter2.js"></script>
+
+    <!-- SHE NEVER EVEN APPLIED -->
+</body>
+
+</html>

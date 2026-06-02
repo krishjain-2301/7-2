@@ -1121,3 +1121,176 @@ body.archive-body {
     margin-bottom: 30px;
     letter-spacing: 5px;
 }
+
+/* =========================================
+   OSINT TOOLKIT (Chapter 2)
+   ========================================= */
+.osint-content {
+    background: #0a0d0a;
+    border: 1px solid #1c3a1c;
+    width: 90vw;
+    max-width: 760px;
+}
+
+.osint-search-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.osint-search-row .terminal-input {
+    max-width: none;
+}
+
+.osint-results {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-family: var(--font-typewriter);
+}
+
+.osint-empty {
+    color: #777;
+    font-family: var(--font-typewriter);
+    padding: 10px 0;
+}
+
+.osint-hit {
+    border: 1px solid #2a2a2a;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 16px;
+    border-radius: 3px;
+    transition: all 0.25s ease;
+}
+
+.osint-hit.live {
+    cursor: pointer;
+    border-color: #1c3a1c;
+}
+
+.osint-hit.live:hover {
+    background: rgba(74, 246, 38, 0.05);
+    border-color: var(--color-terminal);
+}
+
+.osint-hit.private {
+    border-color: #4a3a10;
+}
+
+.osint-hit.dead {
+    opacity: 0.5;
+}
+
+.osint-hit-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.osint-plat {
+    color: #ddd;
+    font-size: 1rem;
+}
+
+.osint-handle {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.osint-status {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.osint-status.locked { color: #d6a52a; }
+.osint-status.open { color: var(--color-terminal); }
+.osint-status.gone { color: var(--color-blood); }
+
+.osint-note {
+    font-size: 0.85rem;
+    color: #999;
+    line-height: 1.5;
+}
+
+.osint-note em { color: #d6a52a; font-style: italic; }
+.osint-link { color: var(--color-terminal); }
+
+.devhub-detail {
+    margin-top: 14px;
+    border-top: 1px dashed #2a2a2a;
+    padding-top: 14px;
+}
+
+.repo-line {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.git-log {
+    background: #000;
+    border: 1px solid #222;
+    color: #9fe89f;
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    padding: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-bottom: 10px;
+}
+
+/* Web archive snapshot */
+.archive-snap {
+    border: 1px solid #2a2a2a;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.archive-bar {
+    background: #15171a;
+    color: #aaa;
+    font-family: monospace;
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.snap-profile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+}
+
+.snap-pfp {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #1f5e1f, #061306);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    border: 2px solid #2a4a2a;
+    flex-shrink: 0;
+}
+
+.snap-name { color: #fff; font-size: 1.05rem; }
+.snap-handle { color: #888; font-size: 0.85rem; margin: 2px 0; }
+.snap-bio { color: #aaa; font-size: 0.85rem; font-style: italic; }
+
+.snap-post {
+    border-top: 1px solid #2a2a2a;
+    padding: 16px 18px;
+}
+
+.snap-post-text { color: #ddd; font-size: 0.95rem; margin-bottom: 8px; }
+.snap-post-date { color: var(--color-blood); font-size: 0.78rem; }
+
+.archive-snap .osint-note { padding: 14px 18px; }

@@ -211,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     sequenceText.innerHTML = `
                         <div class="locked-state">
                             <h2 class="highlight-red" style="font-size: 2.2rem; letter-spacing: 4px;">NEXT RECOVERY:<br>OLIVIA</h2>
+                            <a href="chapter2.html" class="terminal-btn" style="margin-top: 30px; text-decoration: none; display: inline-block;">[ DECRYPT OLIVIA ]</a>
                         </div>
                     `;
                     
