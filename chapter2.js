@@ -131,6 +131,28 @@ Date:   Wed Oct 16 23:41:08 2026
     const archiveBtn = document.getElementById('archive-btn');
     const archiveResults = document.getElementById('archive-results');
 
+    // The recovered (deleted) about.md page with Maya's hidden acrostic.
+    const aboutSnapHtml = `
+        <div class="archive-snap">
+            <div class="archive-bar">📁 devhub.io/vireo_truth/dotfiles/about.md &nbsp;—&nbsp; cached BEFORE edit
+                <span style="color:#888;">2026-10-15 08:12</span></div>
+            <div class="txt-content"
+                style="background:#0d0d0d; border:none; color:#cdd3d8; font-family:monospace; font-size:0.9rem; line-height:1.7; padding:18px; margin:0;">
+                <span style="color:#888;"># about</span><br>
+                Name: <strong style="color:#fff;">Olivia Reed</strong> &nbsp;<span style="color:#a00;">&lt;— deleted in next commit</span><br>
+                "I don't compete. I correct."<br><br>
+                <span style="color:#666;">// recovered annotation — author: M.VERMA</span><br>
+                <span style="color:#9fe89f;">A</span>fter everything, I still kept the receipts.<br>
+                <span style="color:#9fe89f;">L</span>ook again at what she would not say out loud.<br>
+                <span style="color:#9fe89f;">L</span>ies don't survive the first letter.<br>
+                <span style="color:#777;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— M</span>
+            </div>
+            <div class="osint-note" style="border-top:1px dashed #333; padding-top:12px;">
+                ↳ Maya saved this page before Olivia scrubbed it. She left something in the margin.
+                <em>Read it the way she told you to.</em>
+            </div>
+        </div>`;
+
     function renderArchive() {
         const q = archiveInput.value.trim().toLowerCase().replace(/^@/, '').replace(/^chirp\.com\//, '');
         archiveResults.innerHTML = '';
@@ -158,7 +180,64 @@ Date:   Wed Oct 16 23:41:08 2026
                         ↳ REVERSE-IMAGE MATCH: this profile photo is byte-identical to the one on the public account
                         <strong>@livreed</strong> (Olivia Reed). The alias and the real account are the same person.
                     </div>
+                </div>
+                <div class="archive-captures">
+                    <div class="archive-captures-head">⛁ 4 URLs captured for this account</div>
+                    <div class="capture-row">chirp.com/vireo_truth &nbsp;<span class="cap-meta">14 snapshots</span></div>
+                    <div class="capture-row">devhub.io/vireo_truth &nbsp;<span class="cap-meta">3 snapshots</span></div>
+                    <div class="capture-row" id="cap-about">devhub.io/vireo_truth/dotfiles/about.md &nbsp;<span class="cap-meta" style="color:#a06060;">1 snapshot · later removed ✖</span></div>
+                    <div class="capture-row">devhub.io/vireo_truth/dotfiles/readme.md &nbsp;<span class="cap-meta">2 snapshots</span></div>
+                    <div id="cap-about-render"></div>
                 </div>`;
+
+            const capAbout = document.getElementById('cap-about');
+            if (capAbout) {
+                capAbout.addEventListener('click', () => {
+                    const target = document.getElementById('cap-about-render');
+                    if (capAbout.classList.contains('capture-opened')) return;
+                    target.innerHTML = `
+                        <div class="archive-lock">
+                            <div class="archive-lock-head">🔒 This snapshot is access-restricted by the host.</div>
+                            <div class="archive-lock-q">Vireo Labs operates in which industry?</div>
+                            <div class="archive-lock-row">
+                                <input type="text" id="about-key-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="enter key">
+                                <button id="about-key-btn" class="terminal-btn">UNLOCK</button>
+                            </div>
+                            <div id="about-key-error"></div>
+                        </div>`;
+
+                    const ABOUT_KEY_HASHES = [
+                        '28191c082cdcee147c193e213603f9500b6ecffcf8fe5600140717758233a63f', // research and development
+                        '47a5d0a4b4b7a96e837d5c4b7239ee1a9f3ed8660f806518cc40f7056adb416d', // research & development
+                        '7ad33969f06d4144297c89980d8ef31ab2056f61ae0d5ff6e4088f506d5e5244', // research development
+                        'dacc7c16cdbd70964e4fb943292bb231889164f7e6d59bce15a76fd49482b2ae', // r&d
+                        '820056d7cb34d26ca75bf3d28ae9771cf1966f785316d02cebab7835d44238bb', // r & d
+                    ];
+
+                    const aboutKeyInput = document.getElementById('about-key-input');
+                    const aboutKeyBtn = document.getElementById('about-key-btn');
+                    const aboutKeyError = document.getElementById('about-key-error');
+
+                    async function tryAboutKey() {
+                        const hashed = await hashString(aboutKeyInput.value.trim().toLowerCase());
+                        if (ABOUT_KEY_HASHES.includes(hashed)) {
+                            target.innerHTML = aboutSnapHtml;
+                            capAbout.classList.add('capture-opened');
+                        } else {
+                            aboutKeyError.innerText = 'ACCESS DENIED.';
+                            aboutKeyInput.value = '';
+                            aboutKeyInput.classList.add('error-flash');
+                            setTimeout(() => aboutKeyInput.classList.remove('error-flash'), 500);
+                        }
+                    }
+                    aboutKeyBtn.addEventListener('click', tryAboutKey);
+                    aboutKeyInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') tryAboutKey(); });
+                    aboutKeyInput.focus();
+                });
+            }
+        } else if (q.includes('about') || q.includes('dotfiles')) {
+            // Direct search for the deleted page also works.
+            archiveResults.innerHTML = aboutSnapHtml;
         } else if (q === 'livreed') {
             archiveResults.innerHTML = `
                 <div class="archive-snap">
@@ -230,6 +309,19 @@ Date:   Wed Oct 16 23:41:08 2026
     ];
     // gate 2 (sin): envy
     const SIN_HASH = 'fc91368f2036677b48a4ff19f9fd89f613ae0597090e509f534868b6d78df702';
+    // gate 3 (hidden fragment / acrostic): all
+    const FRAGMENT_HASH = '5ef5ef0364b6939c4ca61f34b393f7b368d1be8619647aaf83d5b395919ab629';
+
+    // ---- Cross-chapter fragment store (Maya's 7-word hidden message) ----
+    // Each sin-chapter contributes one word; assembled in Chapter 8.
+    // 1:WE  2:ALL  3:WATCHED  4:HER  5:DROWN  6:THAT  7:NIGHT
+    function addFragment(n, word) {
+        let f = {};
+        try { f = JSON.parse(localStorage.getItem('osiris_fragments') || '{}'); } catch (e) { f = {}; }
+        f[n] = word;
+        localStorage.setItem('osiris_fragments', JSON.stringify(f));
+        return f;
+    }
 
     let quizState = 'who';
 
@@ -283,12 +375,39 @@ Date:   Wed Oct 16 23:41:08 2026
             const sumCloseBtn = document.getElementById('summary-close-btn');
             const caseConfirmBtn = document.getElementById('case-confirm-btn');
 
-            async function triggerEnding(e) {
+            function advanceToFragment(e) {
                 if (e.currentTarget === sumCloseBtn || e.currentTarget === caseConfirmBtn || e.target === modals.summary) {
-                    sumCloseBtn.removeEventListener('click', triggerEnding);
-                    caseConfirmBtn.removeEventListener('click', triggerEnding);
-                    modals.summary.removeEventListener('click', triggerEnding);
+                    sumCloseBtn.removeEventListener('click', advanceToFragment);
+                    caseConfirmBtn.removeEventListener('click', advanceToFragment);
+                    modals.summary.removeEventListener('click', advanceToFragment);
+                    closeModal(modals.summary);
 
+                    quizState = 'fragment';
+                    document.querySelector('.quiz-label').innerHTML =
+                        '<span class="highlight-terminal">CLASSIFICATION LOGGED.</span><br><br>' +
+                        'Maya left one more thing in this case — a single hidden word, buried in a page Olivia tried to delete.<br>' +
+                        '<span style="color:#888; font-size:0.9rem;">Recover the deleted page. Read it the way she told you to. What is the word?</span>';
+                    inputField.value = '';
+                    inputField.disabled = false;
+                    submitBtn.disabled = false;
+                    inputField.focus();
+                    document.getElementById('investigation-quiz').scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
+            sumCloseBtn.addEventListener('click', advanceToFragment);
+            caseConfirmBtn.addEventListener('click', advanceToFragment);
+            modals.summary.addEventListener('click', advanceToFragment);
+
+        } else if (quizState === 'fragment' && hashed === FRAGMENT_HASH) {
+            feedbackText.innerText = '';
+            inputField.disabled = true;
+            submitBtn.disabled = true;
+
+            addFragment(2, 'ALL');
+
+            (async function triggerEnding() {
+                {
                     overlay.style.display = 'flex';
                     overlay.classList.add('active');
 
@@ -300,6 +419,20 @@ Date:   Wed Oct 16 23:41:08 2026
 
                     sequenceText.innerHTML = '<div class="locked-state" style="line-height:2;"><p style="color:#333;">────────────────────────────</p><h2 style="color:#888;">Maya left 7 names.</h2><h2 class="highlight-green">You recovered 2.</h2><h2 class="highlight-red">5 remain.</h2><p style="color:#333;">────────────────────────────</p></div>';
                     await delay(3000);
+
+                    // Meta-puzzle fragment reveal
+                    let frags = {};
+                    try { frags = JSON.parse(localStorage.getItem('osiris_fragments') || '{}'); } catch (e) { frags = {}; }
+                    const fragCount = Object.keys(frags).length;
+                    sequenceText.innerHTML = `
+                        <div class="locked-state">
+                            <p style="color:#888; text-transform:uppercase; letter-spacing:2px;">Hidden fragment recovered</p>
+                            <h1 class="highlight-terminal" style="font-size:3rem; letter-spacing:6px; text-shadow:0 0 20px rgba(74,246,38,0.4);">ALL</h1>
+                            <p style="color:#666; font-family:monospace;">FRAGMENT 02 / 07</p>
+                            <p style="color:#888; font-family:monospace; margin-top:10px;">MESSAGE FRAGMENTS COLLECTED: ${fragCount} / 7</p>
+                            <p style="color:#555; max-width:460px; margin-top:18px; line-height:1.6;">Maya buried one word in every case. Seven words. One message. It only resolves when the last name is recovered.</p>
+                        </div>`;
+                    await delay(4500);
 
                     document.body.classList.add('glitch-active');
                     sequenceText.innerHTML = '<div class="locked-state"><h2 class="highlight-terminal">RECOVERING NEXT SUBJECT...</h2><br><p style="font-family:monospace; color:#555; font-size:1.2rem; margin:20px 0;">[████████░░░░░░░░] 47%</p><div style="color:#888; text-align:left; display:inline-block; line-height:1.6; font-size:1.1rem;">Name Found:<br><span class="highlight-red" style="font-size:1.3rem; font-weight:bold;">[REDACTED]</span><br><br>Memory Integrity:<br><span style="color:#ff4444">08%</span><br><br>Status:<br><span class="highlight-red" style="font-weight:bold; letter-spacing:2px;">CORRUPTED</span></div></div>';
@@ -330,11 +463,7 @@ Date:   Wed Oct 16 23:41:08 2026
                         </div>`;
                     }, 4000);
                 }
-            }
-
-            sumCloseBtn.addEventListener('click', triggerEnding);
-            caseConfirmBtn.addEventListener('click', triggerEnding);
-            modals.summary.addEventListener('click', triggerEnding);
+            })();
 
         } else {
             feedbackText.innerText = 'No match found.';

@@ -1294,3 +1294,82 @@ body.archive-body {
 .snap-post-date { color: var(--color-blood); font-size: 0.78rem; }
 
 .archive-snap .osint-note { padding: 14px 18px; }
+
+/* Web archive — captured URL list */
+.archive-captures {
+    margin-top: 16px;
+    border: 1px solid #222;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 3px;
+    padding: 12px 14px;
+    font-family: monospace;
+    font-size: 0.82rem;
+}
+
+.archive-captures-head {
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.72rem;
+    margin-bottom: 10px;
+}
+
+.capture-row {
+    color: #9aa;
+    padding: 7px 8px;
+    border-top: 1px solid #1a1a1a;
+    word-break: break-all;
+}
+
+.capture-row .cap-meta { color: #5a5a5a; font-size: 0.75rem; }
+
+/* the deleted page is the only clickable row */
+.capture-row#cap-about {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.capture-row#cap-about:hover {
+    background: rgba(74, 246, 38, 0.06);
+    color: #cde;
+}
+
+.capture-row.capture-opened {
+    border-left: 2px solid var(--color-terminal);
+    background: rgba(74, 246, 38, 0.04);
+}
+
+/* Locked archive snapshot prompt */
+.archive-lock {
+    margin-top: 12px;
+    border: 1px solid #4a3a10;
+    background: rgba(74, 58, 16, 0.12);
+    border-radius: 3px;
+    padding: 16px;
+    font-family: var(--font-typewriter);
+}
+
+.archive-lock-head {
+    color: #d6a52a;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.archive-lock-q {
+    color: #ddd;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+
+.archive-lock-row {
+    display: flex;
+    gap: 10px;
+}
+
+#about-key-error {
+    color: var(--color-blood);
+    font-family: var(--font-typewriter);
+    font-size: 0.85rem;
+    min-height: 18px;
+    margin-top: 8px;
+}
