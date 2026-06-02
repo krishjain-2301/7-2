@@ -198,7 +198,7 @@ Date:   Wed Oct 16 23:41:08 2025
                     target.innerHTML = `
                         <div class="archive-lock">
                             <div class="archive-lock-head">🔒 This snapshot is access-restricted by the host.</div>
-                            <div class="archive-lock-q">Vireo Labs operates in which industry?</div>
+                            <div class="archive-lock-q">Vireo Labs operates in which department?</div>
                             <div class="archive-lock-row">
                                 <input type="text" id="about-key-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="enter key">
                                 <button id="about-key-btn" class="terminal-btn">UNLOCK</button>
