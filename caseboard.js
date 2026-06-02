@@ -120,6 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('end-chapter-overlay');
     const sequenceText = document.getElementById('sequence-text');
 
+    // Assigned when the sin is answered; invoked after the hidden-fragment (Q3) is solved.
+    let runEnding = null;
+
     inputField.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             submitBtn.click();
@@ -192,12 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const sumCloseBtn = document.getElementById('summary-close-btn');
             const caseConfirmBtn = document.getElementById('case-confirm-btn');
             
-            async function triggerEnding(e) {
-                if (e.currentTarget === sumCloseBtn || e.currentTarget === caseConfirmBtn || e.target === modalSummary) {
-                    sumCloseBtn.removeEventListener('click', triggerEnding);
-                    caseConfirmBtn.removeEventListener('click', triggerEnding);
-                    modalSummary.removeEventListener('click', triggerEnding);
-                    
+            runEnding = async function () {
+                {
                     overlay.style.display = 'flex';
                     overlay.classList.add('active');
                 
@@ -260,11 +259,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>`;
                     }, 4000);
                 }
+            };
+
+            function advanceToFragment(e) {
+                if (e.currentTarget === sumCloseBtn || e.currentTarget === caseConfirmBtn || e.target === modalSummary) {
+                    sumCloseBtn.removeEventListener('click', advanceToFragment);
+                    caseConfirmBtn.removeEventListener('click', advanceToFragment);
+                    modalSummary.removeEventListener('click', advanceToFragment);
+                    closeModal(modalSummary);
+
+                    quizState = 'fragment';
+                    document.querySelector('.quiz-label').innerHTML =
+                        '<span class="highlight-terminal">CLASSIFICATION LOGGED.</span><br><br>' +
+                        'Maya hid one word where the ink doesn\'t show — for whoever came looking.<br>' +
+                        '<span style="color:#888; font-size:0.9rem;">Open Maya_Diary_002 again. Don\'t just read it — drag-select the whole page. Something is written in the blank space. What word did she hide?</span>';
+                    inputField.value = '';
+                    inputField.disabled = false;
+                    submitBtn.disabled = false;
+                    inputField.focus();
+                    document.getElementById('investigation-quiz').scrollIntoView({ behavior: 'smooth' });
+                }
             }
-            
-            sumCloseBtn.addEventListener('click', triggerEnding);
-            caseConfirmBtn.addEventListener('click', triggerEnding);
-            modalSummary.addEventListener('click', triggerEnding);
+            sumCloseBtn.addEventListener('click', advanceToFragment);
+            caseConfirmBtn.addEventListener('click', advanceToFragment);
+            modalSummary.addEventListener('click', advanceToFragment);
+
+        } else if (quizState === 'fragment' && hashed === 'dc7c811b9561739d9b75bb3e9e1715970a868834e62251b0b9ca02e74d0f42c9') {
+            // Correct Answer 3 — hidden fragment: WE
+            feedbackText.innerText = '';
+            inputField.disabled = true;
+            submitBtn.disabled = true;
+            if (runEnding) runEnding();
 
         } else {
             // Wrong Answer

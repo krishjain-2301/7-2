@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 commit 9c1a4f7e2b8d3a601c0f5e9d77a1b4c83fe21d0a
 Author: olivia.reed &lt;olivia.reed@ashwood.edu&gt;
-Date:   Wed Oct 16 23:41:08 2026
+Date:   Wed Oct 16 23:41:08 2025
 
     remove real name from about page (oops)</pre>
                     <div class="osint-note" style="color:#9fe89f;">↳ the alias forgot to scrub the commit author. <strong>olivia.reed</strong></div>`;
@@ -135,7 +135,7 @@ Date:   Wed Oct 16 23:41:08 2026
     const aboutSnapHtml = `
         <div class="archive-snap">
             <div class="archive-bar">📁 devhub.io/vireo_truth/dotfiles/about.md &nbsp;—&nbsp; cached BEFORE edit
-                <span style="color:#888;">2026-10-15 08:12</span></div>
+                <span style="color:#888;">2025-10-15 08:12</span></div>
             <div class="txt-content"
                 style="background:#0d0d0d; border:none; color:#cdd3d8; font-family:monospace; font-size:0.9rem; line-height:1.7; padding:18px; margin:0;">
                 <span style="color:#888;"># about</span><br>
@@ -163,18 +163,18 @@ Date:   Wed Oct 16 23:41:08 2026
             archiveResults.innerHTML = `
                 <div class="archive-snap">
                     <div class="archive-bar">📁 chirp.com/vireo_truth &nbsp;—&nbsp; cached snapshot
-                        <span style="color:#888;">2026-10-14 21:07</span></div>
+                        <span style="color:#888;">2025-10-14 21:07</span></div>
                     <div class="snap-profile">
                         <div class="snap-pfp" title="profile photo">🌿</div>
                         <div class="snap-meta">
                             <div class="snap-name">🌿 O</div>
                             <div class="snap-handle">@vireo_truth</div>
-                            <div class="snap-bio">accountability &gt; everything. ashwood '26.</div>
+                            <div class="snap-bio">accountability &gt; everything. ashwood '25.</div>
                         </div>
                     </div>
                     <div class="snap-post">
                         <div class="snap-post-text">some people get things they don't deserve. fixed that. 🙂</div>
-                        <div class="snap-post-date">Oct 14, 2026 — the same week Maya's offer was pulled</div>
+                        <div class="snap-post-date">Oct 14, 2025 — the same week Maya's offer was pulled</div>
                     </div>
                     <div class="osint-note" style="color:#9fe89f; border-top:1px dashed #333; padding-top:12px;">
                         ↳ REVERSE-IMAGE MATCH: this profile photo is byte-identical to the one on the public account

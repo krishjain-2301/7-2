@@ -662,6 +662,13 @@ body.archive-body {
     line-height: 1.6;
 }
 
+/* Invisible ink — same colour as the diary paper, only visible when selected */
+.diary-text p.invisible-ink {
+    color: #f4ecd8;
+}
+.diary-text p.invisible-ink::selection { background: #2c2c2c; color: #f4ecd8; }
+.diary-text p.invisible-ink::-moz-selection { background: #2c2c2c; color: #f4ecd8; }
+
 /* Chat Log Content */
 .chat-content {
     background: #0a0a0a;
