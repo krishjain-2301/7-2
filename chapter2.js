@@ -455,7 +455,7 @@ Date:   Wed Oct 16 23:41:08 2025
                     await delay(4500);
 
                     document.body.classList.add('glitch-active');
-                    sequenceText.innerHTML = '<div class="locked-state"><h2 class="highlight-terminal">RECOVERING NEXT SUBJECT...</h2><br><p style="font-family:monospace; color:#555; font-size:1.2rem; margin:20px 0;">[████████░░░░░░░░] 47%</p><div style="color:#888; text-align:left; display:inline-block; line-height:1.6; font-size:1.1rem;">Name Found:<br><span class="highlight-red" style="font-size:1.3rem; font-weight:bold;">[REDACTED]</span><br><br>Memory Integrity:<br><span style="color:#ff4444">08%</span><br><br>Status:<br><span class="highlight-red" style="font-weight:bold; letter-spacing:2px;">CORRUPTED</span></div></div>';
+                    sequenceText.innerHTML = '<div class="locked-state"><h2 class="highlight-terminal">RECOVERING NEXT SUBJECT...</h2><br><p style="font-family:monospace; color:#555; font-size:1.2rem; margin:20px 0;">[████████░░░░░░░░] 47%</p><div style="color:#888; text-align:left; display:inline-block; line-height:1.6; font-size:1.1rem;">Name Found:<br><span class="highlight-red" style="font-size:1.3rem; font-weight:bold;">ETHAN SMITH</span><br><br>Memory Integrity:<br><span style="color:#ff4444">08%</span><br><br>Status:<br><span class="highlight-red" style="font-weight:bold; letter-spacing:2px;">CORRUPTED</span></div></div>';
                     await delay(1200);
                     document.body.classList.remove('glitch-active');
                     await delay(2800);
@@ -465,7 +465,7 @@ Date:   Wed Oct 16 23:41:08 2025
 
                     sequenceText.innerHTML = `
                         <div class="locked-state">
-                            <h2 class="highlight-red" style="font-size:2.2rem; letter-spacing:4px;">NEXT RECOVERY:<br>[REDACTED]</h2>
+                            <h2 class="highlight-red" style="font-size:2.2rem; letter-spacing:4px;">NEXT RECOVERY:<br>ETHAN SMITH</h2>
                             <p style="color:#555; font-family:monospace; margin-top:20px;">CHAPTER 03 — LOCKED</p>
                         </div>`;
 
