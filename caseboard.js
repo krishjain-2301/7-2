@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelector('.quiz-label').innerHTML =
                         '<span class="highlight-terminal">CLASSIFICATION LOGGED.</span><br><br>' +
                         'Maya hid one word where the ink doesn\'t show — for whoever came looking.<br>' +
-                        '<span style="color:#888; font-size:0.9rem;">Open Maya_Diary_002 again. Don\'t just read it — drag-select the whole page. Something is written in the blank space. What word did she hide?</span>';
+                        '<span style="color:#888; font-size:0.9rem;">Open Maya_Diary_002 again. Don\'t leave any blank space alone.</span>';
                     inputField.value = '';
                     inputField.disabled = false;
                     submitBtn.disabled = false;

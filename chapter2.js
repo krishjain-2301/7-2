@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const lookupResults = document.getElementById('lookup-results');
 
     function renderLookup() {
-        const q = lookupInput.value.trim().toLowerCase().replace(/^@/, '');
+        const q = coreHandle(lookupInput.value);
         lookupResults.innerHTML = '';
 
         if (q === '') return;
@@ -154,7 +154,7 @@ Date:   Wed Oct 16 23:41:08 2025
         </div>`;
 
     function renderArchive() {
-        const q = archiveInput.value.trim().toLowerCase().replace(/^@/, '').replace(/^chirp\.com\//, '');
+        const q = coreHandle(archiveInput.value);
         archiveResults.innerHTML = '';
 
         if (q === '') return;
@@ -262,6 +262,19 @@ Date:   Wed Oct 16 23:41:08 2025
 
     function escapeHtml(s) {
         return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    // Normalise a typed handle/URL down to its core token, so that
+    // "www.vireo_truth.com", "vireo_truth", "@vireo_truth" and
+    // "chirp.com/vireo_truth" all resolve the same.
+    function coreHandle(s) {
+        return s.trim().toLowerCase()
+            .replace(/^https?:\/\//, '')
+            .replace(/^www\./, '')
+            .replace(/^chirp\.com\//, '')
+            .replace(/^@/, '')
+            .replace(/\/+$/, '')
+            .replace(/\.com$/, '');
     }
 
     // =====================================================
