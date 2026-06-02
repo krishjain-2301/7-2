@@ -77,11 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const hashed = await hashString(keyPasswordInput.value.trim());
         if (hashed === 'b8e44625a4e3e7a42db83b31a2fb9a5aa35b241aafdb1063740e2cd0468e0ba6' ||
             hashed === '1f46e89e912bde9234a01ed461d42ebf24b67190c142d397a9d07dd7e88c6bc8') {
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch1 · zip password', keyPasswordInput.value.trim(), true);
             closeModal(modalPassword);
             closeModal(modalAryan);
             openModal(modalFcrackContents);
             passwordError.innerText = '';
         } else {
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch1 · zip password', keyPasswordInput.value.trim(), false);
             passwordError.innerText = 'ACCESS DENIED. INVALID KEY.';
             keyPasswordInput.value = '';
         }
@@ -137,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (quizState === 'investigating' && hashed === 'f177e7f92ca0491c7b15e54133fe430b1cb90bf169fd433f15d4b29dfcdef33d') {
             // Correct Answer 1
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch1 · investigating', val, true);
             feedbackText.innerText = '';
             inputField.disabled = true;
             submitBtn.disabled = true;
@@ -181,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } else if (quizState === 'sin' && hashed === '470664bd59f587f32e6d933f058464084d1810ee2b3a81b0d4d59d6dd9623da2') {
             // Correct Answer 2
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch1 · sin', val, true);
             feedbackText.innerText = '';
             inputField.disabled = true;
             submitBtn.disabled = true;
@@ -286,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } else if (quizState === 'fragment' && hashed === 'dc7c811b9561739d9b75bb3e9e1715970a868834e62251b0b9ca02e74d0f42c9') {
             // Correct Answer 3 — hidden fragment: WE
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch1 · hidden word', val, true);
             feedbackText.innerText = '';
             inputField.disabled = true;
             submitBtn.disabled = true;
@@ -293,6 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } else {
             // Wrong Answer
+            if (window.OSIRIS_notify) OSIRIS_notify('Ch1 · ' + quizState, val, false);
             feedbackText.innerText = 'No match found.';
             feedbackText.style.color = 'var(--color-blood)';
             inputField.value = '';

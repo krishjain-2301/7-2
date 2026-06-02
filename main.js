@@ -134,6 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         userName = rawName;
+        // Make the player's name available to the Discord reporter early,
+        // so password attempts on the next step are attributed to them.
+        sessionStorage.setItem('playerName', rawName.charAt(0).toUpperCase() + rawName.slice(1));
         nameInput.disabled = true; // Lock input
         document.getElementById('wrap-name').classList.remove('visible'); // smoothly shrinks
         
@@ -151,10 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const hashedPwd = await hashString(pwd);
         
         if (hashedPwd !== "56d7b4b1af913a6232ddc9d4bd91937183457ab11b42d36620b51d816aa75e75") {
+            if (window.OSIRIS_notify) OSIRIS_notify('login password', pwd, false);
             loginError.innerText = "Error: Invalid Access.";
             loginError.style.color = "var(--color-blood)";
             passwordInput.value = "";
         } else {
+            if (window.OSIRIS_notify) OSIRIS_notify('login password', pwd, true);
+            if (window.OSIRIS_login) OSIRIS_login();
             loginError.innerText = "";
             passwordInput.disabled = true;
             
