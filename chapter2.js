@@ -466,7 +466,7 @@ Date:   Wed Oct 16 23:41:08 2025
                     sequenceText.innerHTML = `
                         <div class="locked-state">
                             <h2 class="highlight-red" style="font-size:2.2rem; letter-spacing:4px;">NEXT RECOVERY:<br>ETHAN SMITH</h2>
-                            <p style="color:#555; font-family:monospace; margin-top:20px;">CHAPTER 03 — LOCKED</p>
+                            <a href="chapter3.html" class="terminal-btn" style="margin-top: 30px; text-decoration: none; display: inline-block;">[ DECRYPT ETHAN ]</a>
                         </div>`;
 
                     const footerRec = document.getElementById('count-recovered');
@@ -495,3 +495,5 @@ Date:   Wed Oct 16 23:41:08 2025
         }
     });
 });
+
+

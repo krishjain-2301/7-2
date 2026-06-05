@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS // CASE #008 - CH.03</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="archive-body">
+    <div class="hidden-clue">he said it was one punch</div>
+
+    <div id="caseboard-container">
+        <header class="case-header">
+            <h1 class="case-title stamp-effect">CASE #008 // CH.03</h1>
+            <div class="case-meta-grid">
+                <div class="meta-column">
+                    <span>Subject: <span class="highlight-red">ETHAN SMITH</span></span>
+                    <span>Status: <span class="highlight-green">OPEN</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Recovered from: <span class="highlight-terminal">MAYA VERMA'S LAPTOP</span></span>
+                    <span>Memory Integrity: <span class="highlight-red">08%</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Trigger: <span class="highlight-terminal">RIVERSIDE ASSAULT</span></span>
+                    <span>Classification: <span class="highlight-red">[REDACTED]</span></span>
+                </div>
+            </div>
+        </header>
+
+        <h2 class="section-title">Recovered Files</h2>
+
+        <div class="warning-message">
+            <strong>WARNING</strong><br>
+            The page was deleted before the story spread.<br>
+            The crawler kept fragments. Reconstruct the route.
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-item file-card" id="btn-diary5">
+                <span class="icon">&#128196;</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_005.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-notice">
+                <span class="icon">&#128203;</span>
+                <div class="file-details">
+                    <span class="filename">disciplinary_notice.pdf</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card corrupted" id="btn-cache">
+                <span class="icon">&#128279;</span>
+                <div class="file-details">
+                    <span class="filename">northledger_cache.warc</span>
+                    <span class="file-meta highlight-red">[PARTIAL CRAWL]</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-hospital">
+                <span class="icon">&#128209;</span>
+                <div class="file-details">
+                    <span class="filename">neurology_summary.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card encrypted" id="btn-ethan">
+                <span class="icon">&#128193;</span>
+                <div class="file-details">
+                    <span class="filename">Ethan</span>
+                    <span class="file-meta highlight-terminal">Encrypted</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-diary6" style="display: none;">
+                <span class="icon">&#128196;</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_006.txt</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="investigation-quiz" class="investigation-quiz">
+            <label for="investigation-input" class="quiz-label">Who put Jonah Wells in the hospital?</label>
+            <div class="input-row">
+                <input type="text" id="investigation-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="_">
+                <button id="submit-investigation" class="terminal-btn">SUBMIT</button>
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
+
+        <footer class="file-status-footer" id="case-footer">
+            <div style="display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%;">
+                <div class="status-box recovered">
+                    <span>RECOVERED FILES:</span>
+                    <span class="count" id="count-recovered">4</span>
+                </div>
+                <div class="status-box locked">
+                    <span style="color: var(--color-blood);">LOCKED FILES:</span>
+                    <span class="count" id="count-locked" style="color: var(--color-blood);">6</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="modal-diary5" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal">&times;</button>
+            <div class="diary-text">
+                <h3>October 24</h3>
+                <p>I found the story before it vanished.</p>
+                <p>Local paper. Morning print. Gone by lunch.</p>
+                <p>Nobody says the Smiths killed it, but nobody says they didn't.</p>
+                <br>
+                <p>They keep calling it a fight.</p>
+                <p>That word is too small.</p>
+                <p>A fight ends when both people stand up.</p>
+                <p>Jonah survived.</p>
+                <p>That's the part everybody uses to feel better.</p>
+                <p>They don't say what survived means now.</p>
+                <br>
+                <p>I didn't save the page.</p>
+                <p>I saved what the crawler saved.</p>
+                <p>The route is broken, not gone.</p>
+                <br>
+                <p>Ethan said it happened fast.</p>
+                <p>He's right.</p>
+                <p>That's what scares me.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-notice" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="txt-content"
+                style="background:#fff; color:#111; font-family:'Times New Roman', serif; padding:30px; line-height:1.6;">
+                <strong style="font-size:1.2rem; letter-spacing:1px;">ASHWOOD UNIVERSITY</strong>
+                <span style="display:block; color:#666; font-size:0.8rem; margin-bottom:20px;">OFFICE OF STUDENT CONDUCT</span>
+                <strong>DISCIPLINARY NOTICE</strong><br><br>
+                Student of concern: <strong>Ethan Smith</strong><br>
+                Related student: <strong>Jonah Wells</strong><br>
+                Incident date: 17 October 2025<br>
+                Location: <strong>Riverside Hall</strong><br><br>
+                Reported conduct: physical assault following verbal altercation at a donor reception.<br><br>
+                Interim status: review suspended pending external counsel and family representation.<br><br>
+                <span style="color:#a00;">Addendum:</span> campus distribution of related media coverage halted by request of legal representatives.
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-cache" class="modal">
+        <div class="modal-content osint-content" style="max-width: 1020px; width: 94vw; background:#0f141a; border-color:#243140;">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>cache_replay // northledger.local</h2>
+            </div>
+            <div class="warning-message" style="border-color:#2c3b4d; background:rgba(120,160,210,0.08); color:#b8cadf;">
+                Recovered crawler assets from 2025-10-18.<br>
+                One article route was deleted after legal pressure. Rebuild it from what remains.
+            </div>
+            <div style="display:grid; grid-template-columns:minmax(220px, 260px) 1fr; gap:20px; align-items:start;">
+                <div class="archive-captures" style="margin-top:0;">
+                    <div class="archive-captures-head">Recovered assets</div>
+                    <div class="capture-row cache-row" data-cache-view="robots">/robots.txt</div>
+                    <div class="capture-row cache-row" data-cache-view="sitemap">/sitemaps/news.xml</div>
+                    <div class="capture-row cache-row" data-cache-view="metro">/metro/index.html</div>
+                    <div class="capture-row cache-row" data-cache-view="bundle">/_static/js/metro.article.js</div>
+                </div>
+                <div id="cache-viewer">
+                    <div class="cache-panel" data-cache-panel="robots" style="display:block; border:1px solid #2a2a2a; background:rgba(255,255,255,0.02);">
+                        <div class="archive-bar">northledger.local/robots.txt - snapshot 2025-10-18 09:02</div>
+                        <pre style="margin:0; padding:18px; color:#9fe89f; font-family:monospace; font-size:0.9rem; line-height:1.7; white-space:pre-wrap;">User-agent: *
+Allow: /
+Disallow: /preview/
+Disallow: /legal/hold/
+Allow: /metro/2025/10/
+
+Sitemap: https://northledger.local/sitemaps/news.xml
+
+# crawler note:
+# pulled story lived under /metro/2025/10/</pre>
+                    </div>
+                    <div class="cache-panel" data-cache-panel="sitemap" style="display:none; border:1px solid #2a2a2a; background:rgba(255,255,255,0.02);">
+                        <div class="archive-bar">northledger.local/sitemaps/news.xml - snapshot 2025-10-18 09:03</div>
+                        <pre style="margin:0; padding:18px; color:#cdd3d8; font-family:monospace; font-size:0.84rem; line-height:1.7; white-space:pre-wrap;">&lt;url&gt;
+  &lt;loc&gt;https://northledger.local/metro/2025/10/riverside-hall-...-report/&lt;/loc&gt;
+  &lt;news:title&gt;Student Assault Report Pulled After Legal Pressure&lt;/news:title&gt;
+  &lt;lastmod&gt;2025-10-18T09:11:52Z&lt;/lastmod&gt;
+&lt;/url&gt;
+
+&lt;url&gt;
+  &lt;loc&gt;https://northledger.local/metro/2025/10/donor-reception-recap/&lt;/loc&gt;
+  &lt;news:title&gt;Donor Reception Raises Expansion Funds&lt;/news:title&gt;
+&lt;/url&gt;</pre>
+                    </div>
+                    <div class="cache-panel" data-cache-panel="metro" style="display:none; border:1px solid #2a2a2a; background:rgba(255,255,255,0.02);">
+                        <div class="archive-bar">northledger.local/metro/index.html - snapshot 2025-10-18 09:08</div>
+                        <div style="padding:18px;">
+                            <div style="font-family:Arial, sans-serif; color:#fff; font-size:1.1rem; margin-bottom:14px;">Metro</div>
+                            <div style="display:flex; flex-direction:column; gap:12px; font-family:Arial, sans-serif;">
+                                <div style="border:1px solid #263445; background:#121a22; padding:14px;">
+                                    <div style="color:#fff; margin-bottom:6px;">Donor Reception Raises Expansion Funds</div>
+                                    <div style="color:#66788b; font-size:0.82rem;">href="/metro/2025/10/donor-reception-recap/"</div>
+                                </div>
+                                <div style="border:1px solid #4a2c2c; background:#181213; padding:14px;">
+                                    <div style="color:#fff; margin-bottom:6px;">Student Assault Report Pulled After Legal Pressure</div>
+                                    <div style="color:#c58d8d; font-size:0.82rem;">href="/metro/2025/10/riverside-hall-assault-.../"</div>
+                                    <div style="color:#666; font-size:0.78rem; margin-top:8px;">410 Gone - linked page missing from live index</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cache-panel" data-cache-panel="bundle" style="display:none; border:1px solid #2a2a2a; background:rgba(255,255,255,0.02);">
+                        <div class="archive-bar">northledger.local/_static/js/metro.article.js - partial bundle</div>
+                        <pre style="margin:0; padding:18px; color:#9fe89f; font-family:monospace; font-size:0.84rem; line-height:1.7; white-space:pre-wrap;">const removedStory = {
+  section: "metro",
+  year: "2025",
+  month: "10",
+  slugHead: "riverside-hall",
+  slugTail: ["assault", "report"].join("-"),
+  headline: "Student Assault Report Pulled After Legal Pressure"
+};
+
+const removedRoute = `/${removedStory.section}/${removedStory.year}/${removedStory.month}/${removedStory.slugHead}-${removedStory.slugTail}/`;</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="archive-lock" style="margin-top:20px;">
+                <div class="archive-lock-head">Rebuild deleted route</div>
+                <div class="archive-lock-q">Use the cached files to reconstruct the removed article URL, then load the archived page.</div>
+                <div class="archive-lock-row">
+                    <input type="text" id="cache-url-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                        placeholder="/metro/2025/10/...">
+                    <button id="cache-url-btn" class="terminal-btn">OPEN CACHED PAGE</button>
+                </div>
+                <div id="cache-url-error"></div>
+            </div>
+            <div id="cache-article" style="display:none; margin-top:20px; border:1px solid #2a2a2a; background:#f3eddc; color:#181818;">
+                <div class="archive-bar" style="background:#e0d8c0; color:#4e4639;">northledger.local/metro/2025/10/riverside-hall-assault-report/ - recovered cached HTML</div>
+                <div style="padding:34px 38px; box-shadow:0 12px 40px rgba(0,0,0,0.25);">
+                    <div style="border-bottom:3px double #222; padding-bottom:12px; margin-bottom:18px; font-family:'Times New Roman', serif;">
+                        <div style="font-size:0.82rem; letter-spacing:2px; text-transform:uppercase; color:#555;">The North Ledger | Metro Edition</div>
+                        <h2 style="margin:10px 0 4px; font-size:2rem; line-height:1.1;">Student Assault Report Pulled After Legal Pressure</h2>
+                        <div style="font-size:0.95rem; color:#555;">By Anika D'Souza | October 18, 2025</div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1.5fr 0.9fr; gap:24px; align-items:start;">
+                        <div style="font-family:'Times New Roman', serif; font-size:1.06rem; line-height:1.7;">
+                            <p><strong style="color:#8a0303; display:inline-block; min-width:0.9em;">W</strong>itnesses described Ethan Smith striking Jonah Wells after an argument outside Riverside Hall late Friday night.</p>
+                            <p><strong style="color:#8a0303; display:inline-block; min-width:0.9em;">A</strong>ccording to initial police notes, Wells hit the pavement after the second blow and did not regain coherent speech at the scene.</p>
+                            <p><strong style="color:#8a0303; display:inline-block; min-width:0.9em;">T</strong>rauma specialists later recorded severe brain swelling, prolonged loss of motor control, and permanent cognitive impairment.</p>
+                            <p><strong style="color:#8a0303; display:inline-block; min-width:0.9em;">C</strong>ampus officials called it an isolated altercation, though attendees reported Smith had been escalating for nearly an hour.</p>
+                            <p><strong style="color:#8a0303; display:inline-block; min-width:0.9em;">H</strong>ours after the first print run, delivery stopped and newsroom staff received letters from outside counsel representing the Smith family.</p>
+                            <p><strong style="color:#8a0303; display:inline-block; min-width:0.9em;">E</strong>ditors were warned that further publication would invite defamation action and threaten donor relationships tied to campus expansion.</p>
+                            <p><strong style="color:#8a0303; display:inline-block; min-width:0.9em;">D</strong>estroyed from the live archive, the report survived only because the crawler captured it first.</p>
+                        </div>
+                        <div>
+                            <div style="border:1px solid #cabf9f; background:#ece4cf; padding:14px; font-family:Arial, sans-serif; font-size:0.9rem; line-height:1.5;">
+                                <strong style="display:block; margin-bottom:8px;">Recovered editor note</strong>
+                                <div style="color:#5c5245;">"Killed after call from external counsel. Cache copies may still exist."</div>
+                            </div>
+                            <div style="margin-top:16px; border:1px dashed #8a0303; background:rgba(138,3,3,0.06); padding:14px; font-family:var(--font-typewriter); font-size:0.88rem; line-height:1.6;">
+                                <span style="color:#8a0303;">Maya:</span><br>
+                                Deleted isn't the same as gone.<br>
+                                Read the first letters, then tell me what we did.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-hospital" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="txt-content"
+                style="background:#101418; border:1px solid #2a3138; color:#cdd3d8; font-family:var(--font-typewriter); padding:25px; line-height:1.7;">
+                Patient: <strong>Jonah Wells</strong><br>
+                Intake: 18 October 2025, 01:14 AM<br>
+                Referring trauma unit: St. Aldwyn Medical Center<br><br>
+                Findings:<br>
+                - Severe traumatic brain injury<br>
+                - Diffuse swelling and frontal lobe damage<br>
+                - Prolonged disorientation after emergency intervention<br>
+                - Lasting impairment considered <span class="highlight-red">highly probable</span><br><br>
+                Consulting note:<br>
+                <i>"Survival achieved. Return to prior level of function unlikely."</i>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-diary6" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal" id="diary6-close-btn">&times;</button>
+            <div class="diary-text">
+                <h3>October 26</h3>
+                <p>I finally watched the clip with sound.</p>
+                <p>I wish I hadn't.</p>
+                <br>
+                <p>He wasn't laughing.</p>
+                <p>He wasn't showing off.</p>
+                <p>He was furious.</p>
+                <p>Clean, immediate, absolute fury.</p>
+                <br>
+                <p>That's the lie people tell about anger.</p>
+                <p>That it passes, so it doesn't count.</p>
+                <p>But the person on the floor keeps counting it forever.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-ethan" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Ethan/</h2>
+            </div>
+            <div class="explorer-grid">
+                <div class="explorer-item" id="btn-ethan-dm">
+                    <span class="icon">&#128172;</span>
+                    <span class="filename">Messages (Unknown)</span>
+                </div>
+                <div class="explorer-item" id="btn-settlement">
+                    <span class="icon">&#128230;</span>
+                    <span class="filename">Settlement.zip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-ethan-dm" class="modal">
+        <div class="modal-content chat-content instagram-dm">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar"></div>
+                <div class="dm-info">
+                    <h2>Unknown</h2>
+                    <span class="dm-status"></span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble received"><span class="text">You said it was one punch.</span></div>
+                <div class="dm-bubble sent"><span class="text">I was angry. It happened fast.</span></div>
+                <div class="dm-bubble received"><span class="text">Fast for you.</span></div>
+                <div class="dm-bubble received"><span class="text">Jonah still wakes up inside that second.</span></div>
+                <div class="dm-bubble sent"><span class="text">I said I was sorry.</span></div>
+                <div class="dm-bubble received"><span class="text">Sorry is for broken glass.</span></div>
+                <div class="dm-bubble received"><span class="text">Not for a brain that never came back the same.</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-password" class="modal">
+        <div class="modal-content password-prompt-content fullscreen-prompt">
+            <button class="close-modal">&times;</button>
+            <h2 class="confidential-title">Settlement.zip</h2>
+            <div style="margin: 20px 0; color: #666; font-family: var(--font-typewriter); font-size: 0.9rem; max-width:600px; text-align:center;">
+                SYS_NOTE: DECRYPT KEY = <strong style="color:#888;">the location named in the suppressed article</strong><br>
+                <span style="color:#777; font-size:0.8rem;">Hint: two words. Use a space.</span>
+            </div>
+            <div class="password-input-wrapper">
+                <input type="text" id="key-password-input" autocomplete="off" spellcheck="false"
+                    placeholder="ENTER KEY">
+                <button id="key-submit-btn">UNLOCK</button>
+            </div>
+            <div id="password-error"></div>
+        </div>
+    </div>
+
+    <div id="modal-settlement-contents" class="modal">
+        <div class="modal-content fcrack-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Settlement/</h2>
+            </div>
+            <div class="fcrack-grid">
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content"
+                        style="background:#fff; color:#000; font-family:'Times New Roman', serif; font-size:0.88rem;">
+                        <strong style="font-size:1.05rem; border-bottom:2px solid #000; display:block; padding-bottom:5px; margin-bottom:10px;">CIVIL COUNSEL SUMMARY</strong>
+                        Client: Smith Family<br>
+                        Matter: Wells v. Smith<br><br>
+                        Proposed resolution:<br>
+                        Financial settlement in exchange for confidentiality, withdrawal of campus-facing complaints, and non-cooperation with press inquiries.<br><br>
+                        Internal note:<br>
+                        <strong style="color:#a00;">"Do not let the article define him."</strong>
+                    </div>
+                    <span class="filename">counsel_summary.pdf</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#111; border:1px solid #333; font-size:0.9rem;">
+                        <span style="color:#ff5555; font-size:0.7rem; display:block; margin-bottom:12px;">CAMPUS SECURITY CALL LOG</span>
+                        00:41 - disturbance reported outside Riverside Hall<br>
+                        00:43 - caller states one student "won't get up"<br>
+                        00:45 - second caller reports "Ethan needs to leave now"<br>
+                        00:51 - ambulance dispatched<br><br>
+                        <span style="color:#666;">Audio attachment removed from institutional archive.</span>
+                    </div>
+                    <span class="filename">security_call_log.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#0d0d0d; border:1px solid #333; color:#888; font-family:monospace;">
+                        I know what everyone thinks.<br><br>
+                        That one second shouldn't define me.<br><br>
+                        But it defined him.<br><br>
+                        So maybe that's enough.<br><br>
+                        <span style="color:#9fe89f;">- unsent draft from Ethan's laptop</span>
+                    </div>
+                    <span class="filename">unsent_statement.txt</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-summary" class="modal" style="z-index: 10000;">
+        <div class="modal-content"
+            style="background:#000; border:1px solid var(--color-blood); max-width:600px; padding:40px; text-align:left; font-family:var(--font-typewriter); color:#fff;">
+            <button class="close-modal" id="summary-close-btn">&times;</button>
+            <h2 id="summary-subject"
+                style="color:var(--color-blood); border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">
+                SUBJECT: ETHAN SMITH</h2>
+            <h3 id="summary-classification" style="color:#888; margin-bottom:30px;">CLASSIFICATION: WRATH</h3>
+            <div style="font-size:1.1rem; line-height:1.8;">
+                <span style="color:#555; text-transform:uppercase;">Findings:</span><br><br>
+                > Lost control in a moment of rage.<br>
+                > Left lasting neurological damage behind.<br>
+                > Let wealth suppress public consequence.<br>
+                <br>
+                <span style="color:var(--color-terminal);">> Jonah Wells survived. His life did not return with him.</span>
+            </div>
+            <div id="case-confirm-btn"
+                style="margin-top:40px; text-align:center; border:1px solid var(--color-blood); color:var(--color-blood); padding:10px; font-weight:bold; letter-spacing:2px; cursor:pointer; transition:all 0.3s;"
+                onmouseover="this.style.background='var(--color-blood)'; this.style.color='#000';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--color-blood)';">
+                CASE CONFIRMED
+            </div>
+        </div>
+    </div>
+
+    <div id="end-chapter-overlay" class="screen cut-screen" style="display:none; z-index: 20000;">
+        <div id="sequence-text" class="terminal-sequence"></div>
+    </div>
+
+    <script src="notify-client.js"></script>
+    <script src="chapter3.js"></script>
+</body>
+
+</html>
