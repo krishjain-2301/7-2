@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS // CASE #008 - CH.06 [LOCKED]</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .lock-wrap {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            gap: 6px;
+        }
+        .lock-glyph {
+            font-size: 4.5rem;
+            line-height: 1;
+            color: var(--color-blood);
+            text-shadow: 0 0 24px rgba(138, 3, 3, 0.6);
+            margin-bottom: 10px;
+        }
+        .lock-sub {
+            color: var(--color-text-dim);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+        }
+        .lock-name {
+            font-size: 3.4rem;
+            letter-spacing: 8px;
+            margin: 6px 0 4px;
+        }
+        .lock-readout {
+            font-family: 'Courier Prime', monospace;
+            color: #888;
+            line-height: 1.9;
+            margin: 26px 0;
+            display: inline-block;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        .lock-readout .v { color: #ff4444; font-weight: bold; }
+        .lock-readout .g { color: var(--color-terminal); }
+        .lock-note {
+            color: #666;
+            max-width: 480px;
+            line-height: 1.7;
+            font-style: italic;
+            margin: 4px auto 0;
+        }
+        .lock-rule { color: #2a2a2a; letter-spacing: 2px; margin: 8px 0; }
+    </style>
+</head>
+
+<body class="archive-body">
+    <div class="lock-wrap">
+        <h1 class="case-title stamp-effect" style="font-size: 1.6rem;">CASE #008 // CH.06</h1>
+
+        <div class="lock-glyph">&#128274;</div>
+        <p class="lock-sub">Subject file encrypted</p>
+        <h2 class="lock-name highlight-red">RHEA</h2>
+        <p class="lock-sub" style="color:#7a4a4a;">Sin: Despair</p>
+
+        <p class="lock-rule">--------------------------------</p>
+
+        <div class="lock-readout">
+            Status:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">LOCKED</span><br>
+            Memory Integrity:&nbsp;<span class="v">03%</span><br>
+            Decryption Key:&nbsp;&nbsp;&nbsp;<span class="v">NOT YET RECOVERED</span><br>
+            Fragments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="g">5</span> / 7 collected
+        </div>
+
+        <p class="lock-rule">--------------------------------</p>
+
+        <p class="lock-note">
+            The next subject is too unstable to open. Maya buried RHEA deeper than the
+            others &mdash; this file stays sealed until the recovery is ready.
+        </p>
+        <p class="lock-note" style="color:#444; margin-top:16px;">
+            WE &middot; ALL &middot; WATCHED &middot; HER &middot; DROWN &middot; <span style="color:#222;">______</span> &middot; <span style="color:#222;">______</span>
+        </p>
+
+        <a href="caseboard.html" class="terminal-btn" style="margin-top: 34px; text-decoration: none; display: inline-block;">[ RETURN TO CASE BOARD ]</a>
+    </div>
+</body>
+
+</html>
