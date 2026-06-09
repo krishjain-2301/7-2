@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS // CASE #008 - CH.05</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Readability: load fonts + cleaner typewriter face, scoped to this page. -->
+    <style>
+        body.archive-body {
+            --font-typewriter: 'Courier Prime', 'Courier New', monospace;
+        }
+        body.archive-body .diary-text p,
+        body.archive-body .diary-text h3 {
+            line-height: 1.75;
+            letter-spacing: 0.2px;
+        }
+
+        /* CTF brief (Challenge 1: web login brute-force) */
+        .ctf-target {
+            display: block; font-family: 'Courier Prime', monospace; font-size: 1.05rem;
+            color: var(--color-terminal); background: #020603; border: 1px solid #1d3a24;
+            padding: 12px 16px; margin: 6px 0 18px; word-break: break-all; text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .ctf-target:hover { background: #08120c; }
+        .ctf-steps { font-family: var(--font-typewriter); color: #d9c6e3; line-height: 1.85; }
+        .ctf-steps code {
+            font-family: 'Courier Prime', monospace; color: var(--color-terminal);
+            background: rgba(74,246,38,0.08); padding: 1px 6px;
+        }
+        .ctf-creds { margin-top: 16px; border: 1px dashed #6b4f78; background: rgba(150,110,170,0.06);
+            padding: 12px 16px; font-family: 'Courier Prime', monospace; color: #e7d6ee; font-size: 0.9rem; }
+    </style>
+</head>
+
+<body class="archive-body">
+    <div class="hidden-clue">she needed to be wanted by everyone</div>
+
+    <div id="caseboard-container">
+        <header class="case-header">
+            <h1 class="case-title stamp-effect">CASE #008 // CH.05</h1>
+            <div class="case-meta-grid">
+                <div class="meta-column">
+                    <span>Subject: <span class="highlight-red">ZARA KHAN</span></span>
+                    <span>Status: <span class="highlight-green">OPEN</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Recovered from: <span class="highlight-terminal">MAYA VERMA'S LAPTOP</span></span>
+                    <span>Memory Integrity: <span class="highlight-red">05%</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Trigger: <span class="highlight-terminal">PRIYA &amp; MIRA</span></span>
+                    <span>Classification: <span class="highlight-red">[REDACTED]</span></span>
+                </div>
+            </div>
+        </header>
+
+        <h2 class="section-title">Recovered Files</h2>
+
+        <div class="warning-message">
+            <strong>WARNING</strong><br>
+            Two friends since childhood. One of them stopped speaking to the other.<br>
+            Maya locked the proof behind a login she left running. Break in to recover it.
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-item file-card" id="btn-diary8">
+                <span class="icon">&#128196;</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_008.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-priya">
+                <span class="icon">&#128172;</span>
+                <div class="file-details">
+                    <span class="filename">zara_to_priya.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-mira">
+                <span class="icon">&#128172;</span>
+                <div class="file-details">
+                    <span class="filename">zara_to_mira.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card corrupted" id="btn-board">
+                <span class="icon">&#128421;</span>
+                <div class="file-details">
+                    <span class="filename">archive_node.url</span>
+                    <span class="file-meta highlight-red">[ONLINE]</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card encrypted" id="btn-zara">
+                <span class="icon">&#128193;</span>
+                <div class="file-details">
+                    <span class="filename">Zara</span>
+                    <span class="file-meta highlight-terminal">Encrypted</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-note" style="display: none;">
+                <span class="icon">&#128221;</span>
+                <div class="file-details">
+                    <span class="filename">maya_note.txt</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="investigation-quiz" class="investigation-quiz">
+            <label for="investigation-input" class="quiz-label">Who turned Priya and Mira against each other?</label>
+            <div class="input-row">
+                <input type="text" id="investigation-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="_">
+                <button id="submit-investigation" class="terminal-btn">SUBMIT</button>
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
+
+        <footer class="file-status-footer" id="case-footer">
+            <div style="display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%;">
+                <div class="status-box recovered">
+                    <span>RECOVERED FILES:</span>
+                    <span class="count" id="count-recovered">4</span>
+                </div>
+                <div class="status-box locked">
+                    <span style="color: var(--color-blood);">LOCKED FILES:</span>
+                    <span class="count" id="count-locked" style="color: var(--color-blood);">6</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Diary 008 -->
+    <div id="modal-diary8" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal">&times;</button>
+            <div class="diary-text">
+                <h3>November 19</h3>
+                <p>Priya and Mira were friends before they could spell their own names.</p>
+                <p>Then Zara happened to both of them.</p>
+                <br>
+                <p>She didn't want a boyfriend. She didn't want either of them like that.</p>
+                <p>She wanted to be the one they both needed.</p>
+                <p>The sun two people argue about.</p>
+                <br>
+                <p>So she told Priya things "Mira said."</p>
+                <p>She told Mira things "Priya said."</p>
+                <p>None of it was real. All of it landed.</p>
+                <br>
+                <p>By winter they weren't speaking. Zara had already moved on to someone new.</p>
+                <p>She didn't even keep the friends. She just needed to know she could take them.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zara -> Priya thread -->
+    <div id="modal-priya" class="modal">
+        <div class="modal-content chat-content instagram-dm">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar"></div>
+                <div class="dm-info">
+                    <h2>Zara &rarr; Priya</h2>
+                    <span class="dm-status"></span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble sent"><span class="text">don't tell Mira I told you this</span></div>
+                <div class="dm-bubble sent"><span class="text">she said you only got the scholarship because of your dad</span></div>
+                <div class="dm-bubble sent"><span class="text">she thinks she's kind of out of your league tbh</span></div>
+                <div class="dm-bubble sent"><span class="text">she didn't say one word to defend you when they were talking</span></div>
+                <div class="dm-bubble received"><span class="text">why would she say that. we've been friends forever</span></div>
+                <div class="dm-bubble sent"><span class="text">i know. that's why it hurt me too. you're the only one i really trust</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zara -> Mira thread -->
+    <div id="modal-mira" class="modal">
+        <div class="modal-content chat-content instagram-dm">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar"></div>
+                <div class="dm-info">
+                    <h2>Zara &rarr; Mira</h2>
+                    <span class="dm-status"></span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble sent"><span class="text">ok don't be mad but Priya's been saying stuff</span></div>
+                <div class="dm-bubble sent"><span class="text">she told everyone you cheated to get the scholarship</span></div>
+                <div class="dm-bubble sent"><span class="text">she said you've completely let yourself go lately</span></div>
+                <div class="dm-bubble sent"><span class="text">she actually laughed when they were mocking you</span></div>
+                <div class="dm-bubble received"><span class="text">that doesn't sound like her at all</span></div>
+                <div class="dm-bubble sent"><span class="text">i didn't want to believe it either. you're the only real friend i've got</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archive node / web-CTF brief (Challenge 1) -->
+    <div id="modal-board" class="modal">
+        <div class="modal-content osint-content" style="max-width: 760px; width: 94vw; background:#120c16; border-color:#3a2a40;">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>archive_node.url</h2>
+            </div>
+            <div class="warning-message" style="border-color:#3a2a40; background:rgba(150,110,170,0.08); color:#d9c6e3;">
+                Maya left a server running. She locked the word behind a login.<br>
+                It's still reachable. Get in &mdash; the fragment is on the other side.
+            </div>
+
+            <span style="color:#9a7caa; font-family:'Courier Prime',monospace; font-size:0.78rem; letter-spacing:1px;">TARGET</span>
+            <a class="ctf-target" id="ctf-target-link" href="/" target="_blank" rel="noopener">/</a>
+
+            <div class="ctf-steps">
+                1. Even a stripped server keeps the one file that tells crawlers what to ignore.
+                   Start at <code>/robots.txt</code>.<br>
+                2. Follow the path it tries to hide. There's a login waiting.<br>
+                3. The username is known. The password is one ordinary word &mdash;
+                   <strong>brute-force</strong> it against the login.<br>
+                4. Authenticate. Maya's word is on the other side. Bring it back here.
+            </div>
+
+            <div class="ctf-creds">
+                username: <span style="color:var(--color-terminal);">zara</span><br>
+                password: <span style="color:#ff8888;">??????</span>  &nbsp;&larr; one word from a common wordlist<br>
+                <span style="color:#9a7caa; font-size:0.8rem;">e.g. /usr/share/wordlists/common.txt</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zara folder (encrypted) -->
+    <div id="modal-zara" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Zara/</h2>
+            </div>
+            <div class="explorer-grid">
+                <div class="explorer-item" id="btn-zara-dm">
+                    <span class="icon">&#128172;</span>
+                    <span class="filename">Messages (New person)</span>
+                </div>
+                <div class="explorer-item" id="btn-vault">
+                    <span class="icon">&#128230;</span>
+                    <span class="filename">vanish_mode.zip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zara moving-on DM -->
+    <div id="modal-zara-dm" class="modal">
+        <div class="modal-content chat-content instagram-dm">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar"></div>
+                <div class="dm-info">
+                    <h2>Zara &rarr; (someone new)</h2>
+                    <span class="dm-status"></span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble received"><span class="text">weren't you super close with Priya and Mira?</span></div>
+                <div class="dm-bubble sent"><span class="text">ugh that whole thing got so toxic. i had to cut it off</span></div>
+                <div class="dm-bubble received"><span class="text">that's sad, they were best friends right</span></div>
+                <div class="dm-bubble sent"><span class="text">anyway. tell me about you. i feel like i already get you better than they ever got me</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vault password (key = what she used people for) -->
+    <div id="modal-vault-key" class="modal">
+        <div class="modal-content password-prompt-content fullscreen-prompt">
+            <button class="close-modal">&times;</button>
+            <h2 class="confidential-title">vanish_mode.zip</h2>
+            <div style="margin: 20px 0; color: #666; font-family: var(--font-typewriter); font-size: 0.9rem; max-width:600px; text-align:center;">
+                SYS_NOTE: DECRYPT KEY = <strong style="color:#888;">what Zara actually used people for</strong><br>
+                <span style="color:#777; font-size:0.8rem;">Hint: not sex. one word. (read the diary)</span>
+            </div>
+            <div class="password-input-wrapper">
+                <input type="text" id="vault-input" autocomplete="off" spellcheck="false"
+                    placeholder="ENTER KEY">
+                <button id="vault-submit-btn">UNLOCK</button>
+            </div>
+            <div id="vault-error"></div>
+        </div>
+    </div>
+
+    <!-- Vault contents -->
+    <div id="modal-vault-contents" class="modal">
+        <div class="modal-content fcrack-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/vanish_mode/</h2>
+            </div>
+            <div class="fcrack-grid">
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content"
+                        style="background:#fff; color:#000; font-family:'Times New Roman', serif; font-size:0.88rem;">
+                        <strong style="font-size:1.05rem; border-bottom:2px solid #000; display:block; padding-bottom:5px; margin-bottom:10px;">NOTES.APP - PRIVATE</strong>
+                        both of them texted me today.<br>
+                        crying. about each other.<br><br>
+                        is it bad that it felt good?<br>
+                        like i was the only thing holding either of them up.<br><br>
+                        <strong style="color:#a00;">that's the part i'll miss.</strong>
+                    </div>
+                    <span class="filename">private_notes.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#111; border:1px solid #333; font-size:0.9rem;">
+                        <span style="color:#ff5555; font-size:0.7rem; display:block; margin-bottom:12px;">AFTERMATH</span>
+                        Priya &mdash; left the city. Deleted everyone.<br>
+                        Mira &mdash; still thinks Priya betrayed her.<br>
+                        Neither knows the messages came from the same person.<br><br>
+                        <span style="color:#666;">14 years of friendship. Ended over things neither of them said.</span>
+                    </div>
+                    <span class="filename">fallout.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#0d0d0d; border:1px solid #333; color:#888; font-family:monospace;">
+                        people are mirrors.<br><br>
+                        you tilt them right and you finally look like enough.<br><br>
+                        i didn't want them.<br><br>
+                        i wanted how i looked when they needed me.<br><br>
+                        <span style="color:#9fe89f;">- unsent note from Zara's laptop</span>
+                    </div>
+                    <span class="filename">unsent_note.txt</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- maya_note.txt (recovered after Q1) -->
+    <div id="modal-note" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal" id="note-close-btn">&times;</button>
+            <div class="diary-text">
+                <h3>maya_note.txt</h3>
+                <p style="color:#8a0303;">Maya:</p>
+                <p>She hid people from each other. So I hid the word on a server she can't reach anymore.</p>
+                <p>Open <strong>archive_node.url</strong>. The node is still online.</p>
+                <br>
+                <p>Check what it tells crawlers to ignore. Follow that path to the login.</p>
+                <p>Username is <strong>zara</strong> &mdash; of course it is. The password is one common word. Force it.</p>
+                <br>
+                <p>Get in, and the word is yours. Then tell me what we all watched.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lust summary -->
+    <div id="modal-summary" class="modal" style="z-index: 10000;">
+        <div class="modal-content"
+            style="background:#000; border:1px solid var(--color-blood); max-width:600px; padding:40px; text-align:left; font-family:var(--font-typewriter); color:#fff;">
+            <button class="close-modal" id="summary-close-btn">&times;</button>
+            <h2 id="summary-subject"
+                style="color:var(--color-blood); border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">
+                SUBJECT: ZARA KHAN</h2>
+            <h3 id="summary-classification" style="color:#888; margin-bottom:30px;">CLASSIFICATION: LUST</h3>
+            <div style="font-size:1.1rem; line-height:1.8;">
+                <span style="color:#555; text-transform:uppercase;">Findings:</span><br><br>
+                > Fed two lifelong friends lies about each other.<br>
+                > Made them compete for her attention.<br>
+                > Consumed the trust, then moved on to someone new.<br>
+                <br>
+                <span style="color:var(--color-terminal);">> Not desire for a body. Desire to be wanted. People as mirrors.</span>
+            </div>
+            <div id="case-confirm-btn"
+                style="margin-top:40px; text-align:center; border:1px solid var(--color-blood); color:var(--color-blood); padding:10px; font-weight:bold; letter-spacing:2px; cursor:pointer; transition:all 0.3s;"
+                onmouseover="this.style.background='var(--color-blood)'; this.style.color='#000';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--color-blood)';">
+                CASE CONFIRMED
+            </div>
+        </div>
+    </div>
+
+    <div id="end-chapter-overlay" class="screen cut-screen" style="display:none; z-index: 20000;">
+        <div id="sequence-text" class="terminal-sequence"></div>
+    </div>
+
+    <script src="notify-client.js"></script>
+    <script src="chapter5.js"></script>
+</body>
+
+</html>

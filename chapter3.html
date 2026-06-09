@@ -5,7 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OSIRIS // CASE #008 - CH.03</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
+
+    <!-- Chapter 3 readability: load the fonts (other chapters omit them, so
+         'Special Elite' was falling back to the browser's cursive face) and
+         swap the typewriter font for a cleaner, still-on-theme monospace.
+         Scoped to this page only via the CSS variable. -->
+    <style>
+        body.archive-body {
+            --font-typewriter: 'Courier Prime', 'Courier New', monospace;
+        }
+        body.archive-body .diary-text p,
+        body.archive-body .diary-text h3 {
+            line-height: 1.75;
+            letter-spacing: 0.2px;
+        }
+    </style>
 </head>
 
 <body class="archive-body">

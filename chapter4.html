@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS // CASE #008 - CH.04</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Readability: load fonts + cleaner typewriter face, scoped to this page. -->
+    <style>
+        body.archive-body {
+            --font-typewriter: 'Courier Prime', 'Courier New', monospace;
+        }
+        body.archive-body .diary-text p,
+        body.archive-body .diary-text h3 {
+            line-height: 1.75;
+            letter-spacing: 0.2px;
+        }
+
+        /* Ledger table (Challenge 1) */
+        .ledger-table { width: 100%; border-collapse: collapse; font-family: 'Courier Prime', monospace; font-size: 0.86rem; }
+        .ledger-table th, .ledger-table td { padding: 8px 10px; border-bottom: 1px solid #243140; text-align: left; }
+        .ledger-table th { color: #7fa8d8; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 1px; }
+        .ledger-table td.num { text-align: right; }
+        .ledger-out { color: #ff6b6b; }
+        .ledger-in { color: #9fe89f; }
+        .ledger-flag { color: #e0b000; }
+        .ledger-row-hidden { background: rgba(224, 176, 0, 0.06); }
+        #ledger-reveal { display: none; margin-top: 18px; border: 1px solid #4a3c10; background: rgba(224, 176, 0, 0.06); padding: 16px; }
+        .memo-chip { display: inline-block; border: 1px solid #4a3c10; background: #1a1606; color: #e0b000; font-family: 'Courier Prime', monospace; padding: 4px 10px; margin: 4px; letter-spacing: 2px; }
+    </style>
+</head>
+
+<body class="archive-body">
+    <div class="hidden-clue">it was only money to him</div>
+
+    <div id="caseboard-container">
+        <header class="case-header">
+            <h1 class="case-title stamp-effect">CASE #008 // CH.04</h1>
+            <div class="case-meta-grid">
+                <div class="meta-column">
+                    <span>Subject: <span class="highlight-red">NOAH CARTER</span></span>
+                    <span>Status: <span class="highlight-green">OPEN</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Recovered from: <span class="highlight-terminal">MAYA VERMA'S LAPTOP</span></span>
+                    <span>Memory Integrity: <span class="highlight-red">06%</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Trigger: <span class="highlight-terminal">THE HOPE FUND</span></span>
+                    <span>Classification: <span class="highlight-red">[REDACTED]</span></span>
+                </div>
+            </div>
+        </header>
+
+        <h2 class="section-title">Recovered Files</h2>
+
+        <div class="warning-message">
+            <strong>WARNING</strong><br>
+            The fund balance was edited to look full.<br>
+            Reconcile the ledger. The missing money has a name on it.
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-item file-card" id="btn-diary7">
+                <span class="icon">&#128196;</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_007.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-invoice">
+                <span class="icon">&#127973;</span>
+                <div class="file-details">
+                    <span class="filename">surgery_invoice.pdf</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card corrupted" id="btn-ledger">
+                <span class="icon">&#128202;</span>
+                <div class="file-details">
+                    <span class="filename">hope_fund_ledger.csv</span>
+                    <span class="file-meta highlight-red">[BALANCE EDITED]</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-obituary">
+                <span class="icon">&#128209;</span>
+                <div class="file-details">
+                    <span class="filename">hannah_cole_notice.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card encrypted" id="btn-noah">
+                <span class="icon">&#128193;</span>
+                <div class="file-details">
+                    <span class="filename">Noah</span>
+                    <span class="file-meta highlight-terminal">Encrypted</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-cipher" style="display: none;">
+                <span class="icon">&#128290;</span>
+                <div class="file-details">
+                    <span class="filename">numbers_note.txt</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="investigation-quiz" class="investigation-quiz">
+            <label for="investigation-input" class="quiz-label">Whose name is on the money that left the fund?</label>
+            <div class="input-row">
+                <input type="text" id="investigation-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="_">
+                <button id="submit-investigation" class="terminal-btn">SUBMIT</button>
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
+
+        <footer class="file-status-footer" id="case-footer">
+            <div style="display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%;">
+                <div class="status-box recovered">
+                    <span>RECOVERED FILES:</span>
+                    <span class="count" id="count-recovered">4</span>
+                </div>
+                <div class="status-box locked">
+                    <span style="color: var(--color-blood);">LOCKED FILES:</span>
+                    <span class="count" id="count-locked" style="color: var(--color-blood);">6</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Diary 007 -->
+    <div id="modal-diary7" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal">&times;</button>
+            <div class="diary-text">
+                <h3>November 03</h3>
+                <p>Everyone keeps saying Noah is good with numbers.</p>
+                <p>They mean it as a compliment.</p>
+                <br>
+                <p>He ran the Hope Fund. The one for Hannah's surgery.</p>
+                <p>Daniel trusted him with all of it. Of course he did.</p>
+                <p>Noah was the responsible one. The one who balanced things.</p>
+                <br>
+                <p>The page he kept showing everyone said the fund was full.</p>
+                <p>It was not full.</p>
+                <p>The balance column never moved. The money did.</p>
+                <br>
+                <p>He told me later it was just money.</p>
+                <p>I asked him whose life "just money" was paying for.</p>
+                <p>He didn't answer. He never had to.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Surgery invoice -->
+    <div id="modal-invoice" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="txt-content"
+                style="background:#fff; color:#111; font-family:'Times New Roman', serif; padding:30px; line-height:1.6;">
+                <strong style="font-size:1.2rem; letter-spacing:1px;">ST. ALDWYN MEDICAL CENTER</strong>
+                <span style="display:block; color:#666; font-size:0.8rem; margin-bottom:20px;">CARDIOTHORACIC SURGERY - BILLING</span>
+                <strong>PRE-AUTHORIZATION INVOICE</strong><br><br>
+                Patient: <strong>Hannah Cole</strong><br>
+                Procedure: mitral valve repair (time-critical)<br>
+                Scheduled: 28 October 2025<br>
+                Amount required to confirm: <strong>$42,000.00</strong><br><br>
+                <span style="color:#a00;">STATUS: PAYMENT DECLINED - INSUFFICIENT FUNDS ON FILE.</span><br>
+                Procedure postponed. Re-scheduling subject to clinical risk review.<br><br>
+                <span style="color:#666; font-size:0.85rem;">Note: window for repair is narrow. Delay materially increases mortality risk.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ledger (Challenge 1: reconcile) -->
+    <div id="modal-ledger" class="modal">
+        <div class="modal-content osint-content" style="max-width: 1020px; width: 94vw; background:#0f141a; border-color:#243140;">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>hope_fund_ledger.csv // northbank.local</h2>
+            </div>
+            <div class="warning-message" style="border-color:#2c3b4d; background:rgba(120,160,210,0.08); color:#b8cadf;">
+                The <strong>BALANCE</strong> column was frozen so the fund would look full.<br>
+                Three outgoing transfers were never deducted. Find how much is actually missing.
+            </div>
+
+            <table class="ledger-table">
+                <thead>
+                    <tr><th>Date</th><th>Description</th><th class="num">In</th><th class="num">Out</th><th class="num">Balance (shown)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Oct 02</td><td>Fundraiser launch - donor batch</td><td class="num ledger-in">12,000</td><td class="num"></td><td class="num">12,000</td></tr>
+                    <tr><td>Oct 05</td><td>Community pledges</td><td class="num ledger-in">9,500</td><td class="num"></td><td class="num">21,500</td></tr>
+                    <tr class="ledger-row-hidden"><td>Oct 09</td><td>Transfer out &mdash; <span class="ledger-flag">VENDOR REF 08</span></td><td class="num"></td><td class="num ledger-out">6,800</td><td class="num">21,500 <span class="ledger-flag">&larr; not deducted</span></td></tr>
+                    <tr><td>Oct 14</td><td>Workplace match - donor batch</td><td class="num ledger-in">8,000</td><td class="num"></td><td class="num">29,500</td></tr>
+                    <tr class="ledger-row-hidden"><td>Oct 17</td><td>Transfer out &mdash; <span class="ledger-flag">VENDOR REF 05</span></td><td class="num"></td><td class="num ledger-out">5,500</td><td class="num">29,500 <span class="ledger-flag">&larr; not deducted</span></td></tr>
+                    <tr><td>Oct 21</td><td>Final pledges - donor batch</td><td class="num ledger-in">12,500</td><td class="num"></td><td class="num">42,000</td></tr>
+                    <tr class="ledger-row-hidden"><td>Oct 24</td><td>Transfer out &mdash; <span class="ledger-flag">VENDOR REF 18</span></td><td class="num"></td><td class="num ledger-out">6,200</td><td class="num">42,000 <span class="ledger-flag">&larr; not deducted</span></td></tr>
+                    <tr><td>Oct 28</td><td>Surgery invoice presented ($42,000)</td><td class="num"></td><td class="num ledger-out">DECLINED</td><td class="num">42,000</td></tr>
+                </tbody>
+            </table>
+
+            <div class="archive-lock" style="margin-top:20px;">
+                <div class="archive-lock-head">Reconcile the fund</div>
+                <div class="archive-lock-q">The statement shows $42,000. Three transfers were never subtracted. How much is actually missing? (digits only)</div>
+                <div class="archive-lock-row">
+                    <input type="text" id="ledger-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                        placeholder="amount missing">
+                    <button id="ledger-btn" class="terminal-btn">RECONCILE</button>
+                </div>
+                <div id="ledger-error"></div>
+            </div>
+
+            <div id="ledger-reveal">
+                <strong style="color:#e0b000; letter-spacing:1px;">RECONCILED &mdash; 3 transfers traced.</strong><br>
+                <div style="color:#b8cadf; margin:10px 0 14px; font-family:'Courier Prime', monospace; font-size:0.9rem;">
+                    All three "vendor" transfers cleared to the same account holder:<br>
+                    <span class="highlight-red" style="font-size:1.1rem;">N. CARTER &mdash; personal account ****4417</span>
+                </div>
+                <div style="color:#888;">The reference numbers were never vendor codes. He kept them in order:</div>
+                <div>
+                    <span class="memo-chip">REF 08</span>
+                    <span class="memo-chip">REF 05</span>
+                    <span class="memo-chip">REF 18</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hannah Cole notice -->
+    <div id="modal-obituary" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="txt-content"
+                style="background:#101418; border:1px solid #2a3138; color:#cdd3d8; font-family:var(--font-typewriter); padding:25px; line-height:1.7;">
+                <strong>IN MEMORY</strong><br>
+                <strong>Hannah Cole</strong>, 34<br><br>
+                Passed 11 November 2025, two weeks after a postponed cardiac procedure.<br><br>
+                Survived by her husband, Daniel, who spent a year raising the cost of the surgery she did not receive in time.<br><br>
+                <i>"The money was there. And then it wasn't. Nobody could tell me where it went."</i><br>
+                <span style="color:#666; font-size:0.85rem;">- Daniel Cole, to the fund's volunteers</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Noah folder (encrypted) -->
+    <div id="modal-noah" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Noah/</h2>
+            </div>
+            <div class="explorer-grid">
+                <div class="explorer-item" id="btn-noah-dm">
+                    <span class="icon">&#128172;</span>
+                    <span class="filename">Messages (Daniel)</span>
+                </div>
+                <div class="explorer-item" id="btn-vault">
+                    <span class="icon">&#128230;</span>
+                    <span class="filename">Vault.zip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Noah DM -->
+    <div id="modal-noah-dm" class="modal">
+        <div class="modal-content chat-content instagram-dm">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar"></div>
+                <div class="dm-info">
+                    <h2>Daniel Cole</h2>
+                    <span class="dm-status"></span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble received"><span class="text">The hospital said the fund came up short. That's impossible.</span></div>
+                <div class="dm-bubble sent"><span class="text">There must be a processing delay. I'll look into it.</span></div>
+                <div class="dm-bubble received"><span class="text">Noah. They moved her surgery. Do you understand what that means.</span></div>
+                <div class="dm-bubble sent"><span class="text">It's just money. We'll get it back.</span></div>
+                <div class="dm-bubble received"><span class="text">It was never just money to me.</span></div>
+                <div class="dm-bubble received"><span class="text">It was the only time she had left.</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vault password (Challenge 2: numeric key = siphoned amount) -->
+    <div id="modal-vault-key" class="modal">
+        <div class="modal-content password-prompt-content fullscreen-prompt">
+            <button class="close-modal">&times;</button>
+            <h2 class="confidential-title">Vault.zip</h2>
+            <div style="margin: 20px 0; color: #666; font-family: var(--font-typewriter); font-size: 0.9rem; max-width:600px; text-align:center;">
+                SYS_NOTE: DECRYPT KEY = <strong style="color:#888;">the exact amount Noah skimmed from the fund</strong><br>
+                <span style="color:#777; font-size:0.8rem;">Hint: digits only, no symbols. Reconcile the ledger first.</span>
+            </div>
+            <div class="password-input-wrapper">
+                <input type="text" id="vault-input" autocomplete="off" spellcheck="false"
+                    placeholder="ENTER AMOUNT">
+                <button id="vault-submit-btn">UNLOCK</button>
+            </div>
+            <div id="vault-error"></div>
+        </div>
+    </div>
+
+    <!-- Vault contents -->
+    <div id="modal-vault-contents" class="modal">
+        <div class="modal-content fcrack-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Vault/</h2>
+            </div>
+            <div class="fcrack-grid">
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content"
+                        style="background:#fff; color:#000; font-family:'Times New Roman', serif; font-size:0.88rem;">
+                        <strong style="font-size:1.05rem; border-bottom:2px solid #000; display:block; padding-bottom:5px; margin-bottom:10px;">TRANSFER LEDGER (PRIVATE)</strong>
+                        Acct holder: Noah Carter (****4417)<br><br>
+                        Oct 09 &nbsp; +6,800 &nbsp; ref 08<br>
+                        Oct 17 &nbsp; +5,500 &nbsp; ref 05<br>
+                        Oct 24 &nbsp; +6,200 &nbsp; ref 18<br><br>
+                        <strong style="color:#a00;">Total moved: 18,500</strong>
+                    </div>
+                    <span class="filename">private_transfers.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#111; border:1px solid #333; font-size:0.9rem;">
+                        <span style="color:#ff5555; font-size:0.7rem; display:block; margin-bottom:12px;">CARE TIMELINE</span>
+                        Oct 28 - surgery declined, funds short<br>
+                        Oct 30 - procedure postponed (clinical risk noted)<br>
+                        Nov 04 - re-funding attempt, too late for window<br>
+                        Nov 11 - patient deceased<br><br>
+                        <span style="color:#666;">Delay attributable to shortfall of $18,500.</span>
+                    </div>
+                    <span class="filename">care_timeline.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#0d0d0d; border:1px solid #333; color:#888; font-family:monospace;">
+                        I always meant to put it back.<br><br>
+                        That's the part I told myself.<br><br>
+                        It was just money. Money comes back.<br><br>
+                        She didn't.<br><br>
+                        <span style="color:#9fe89f;">- unsent note from Noah's laptop</span>
+                    </div>
+                    <span class="filename">unsent_note.txt</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- numbers_note.txt (cipher hint, recovered after Q1) -->
+    <div id="modal-cipher" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal" id="cipher-close-btn">&times;</button>
+            <div class="diary-text">
+                <h3>numbers_note.txt</h3>
+                <p style="color:#8a0303;">Maya:</p>
+                <p>Noah hides everything in numbers, so I hid this in his.</p>
+                <p>The three reference codes he stamped on the stolen transfers aren't random.</p>
+                <br>
+                <p>Read them in order. A = 01, B = 02, C = 03 ... Z = 26.</p>
+                <p>The fund balance lied. The numbers don't.</p>
+                <br>
+                <p style="color:#888; font-family:'Courier Prime', monospace;">REF 08&nbsp;&nbsp;&nbsp;REF 05&nbsp;&nbsp;&nbsp;REF 18</p>
+                <p>Decode it, then tell me who we all watched.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Greed summary -->
+    <div id="modal-summary" class="modal" style="z-index: 10000;">
+        <div class="modal-content"
+            style="background:#000; border:1px solid var(--color-blood); max-width:600px; padding:40px; text-align:left; font-family:var(--font-typewriter); color:#fff;">
+            <button class="close-modal" id="summary-close-btn">&times;</button>
+            <h2 id="summary-subject"
+                style="color:var(--color-blood); border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">
+                SUBJECT: NOAH CARTER</h2>
+            <h3 id="summary-classification" style="color:#888; margin-bottom:30px;">CLASSIFICATION: GREED</h3>
+            <div style="font-size:1.1rem; line-height:1.8;">
+                <span style="color:#555; text-transform:uppercase;">Findings:</span><br><br>
+                > Drained a medical fund held in trust.<br>
+                > Froze the balance so the theft stayed invisible.<br>
+                > Chose the money over a life he could have saved.<br>
+                <br>
+                <span style="color:var(--color-terminal);">> Hannah Cole's surgery was delayed. The delay was fatal.</span>
+            </div>
+            <div id="case-confirm-btn"
+                style="margin-top:40px; text-align:center; border:1px solid var(--color-blood); color:var(--color-blood); padding:10px; font-weight:bold; letter-spacing:2px; cursor:pointer; transition:all 0.3s;"
+                onmouseover="this.style.background='var(--color-blood)'; this.style.color='#000';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--color-blood)';">
+                CASE CONFIRMED
+            </div>
+        </div>
+    </div>
+
+    <div id="end-chapter-overlay" class="screen cut-screen" style="display:none; z-index: 20000;">
+        <div id="sequence-text" class="terminal-sequence"></div>
+    </div>
+
+    <script src="notify-client.js"></script>
+    <script src="chapter4.js"></script>
+</body>
+
+</html>
