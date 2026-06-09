@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         priya: document.getElementById('modal-priya'),
         mira: document.getElementById('modal-mira'),
         board: document.getElementById('modal-board'),
+        passwords: document.getElementById('modal-passwords'),
         zara: document.getElementById('modal-zara'),
         zaraDm: document.getElementById('modal-zara-dm'),
         vaultKey: document.getElementById('modal-vault-key'),
@@ -37,6 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-priya').addEventListener('click', () => openModal(modals.priya));
     document.getElementById('btn-mira').addEventListener('click', () => openModal(modals.mira));
     document.getElementById('btn-board').addEventListener('click', () => openModal(modals.board));
+
+    // passwords.txt: open the leaked list and lazy-load it from the served file (single source of truth)
+    let passwordsLoaded = false;
+    document.getElementById('btn-passwords').addEventListener('click', () => {
+        openModal(modals.passwords);
+        if (passwordsLoaded) return;
+        passwordsLoaded = true;
+        const pre = document.getElementById('passwords-list');
+        fetch('/passwords.txt')
+            .then((r) => r.text())
+            .then((t) => { pre.textContent = t.replace(/\n+$/, ''); })
+            .catch(() => { pre.textContent = 'Could not load passwords.txt — download it instead.'; passwordsLoaded = false; });
+    });
     document.getElementById('btn-zara').addEventListener('click', () => openModal(modals.zara));
 
     const btnNote = document.getElementById('btn-note');

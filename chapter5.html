@@ -97,6 +97,13 @@
                     <span class="file-meta highlight-red">[ONLINE]</span>
                 </div>
             </div>
+            <div class="evidence-item file-card" id="btn-passwords">
+                <span class="icon">&#128273;</span>
+                <div class="file-details">
+                    <span class="filename">passwords.txt</span>
+                    <span class="file-meta">76 entries</span>
+                </div>
+            </div>
             <div class="evidence-item file-card encrypted" id="btn-zara">
                 <span class="icon">&#128193;</span>
                 <div class="file-details">
@@ -126,7 +133,7 @@
             <div style="display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%;">
                 <div class="status-box recovered">
                     <span>RECOVERED FILES:</span>
-                    <span class="count" id="count-recovered">4</span>
+                    <span class="count" id="count-recovered">5</span>
                 </div>
                 <div class="status-box locked">
                     <span style="color: var(--color-blood);">LOCKED FILES:</span>
@@ -231,9 +238,25 @@
                 username: <span style="color:var(--color-terminal);">zara</span><br>
                 password: <span style="color:#ff8888;">??????</span>  &nbsp;&larr; one word from the wordlist below<br>
                 <span style="color:#9a7caa; font-size:0.8rem;">Maya's leaked list &mdash;
-                <a href="/vault_wordlist.txt" download class="ctf-target" style="display:inline; padding:2px 6px; font-size:0.8rem;">vault_wordlist.txt</a>
-                (75 candidates)</span>
+                <a href="/passwords.txt" download class="ctf-target" style="display:inline; padding:2px 6px; font-size:0.8rem;">passwords.txt</a>
+                (76 candidates, also on the board)</span>
             </div>
+        </div>
+    </div>
+
+    <!-- passwords.txt (leaked candidate list for the brute-force) -->
+    <div id="modal-passwords" class="modal">
+        <div class="modal-content osint-content" style="max-width: 560px; width: 92vw; background:#120c16; border-color:#3a2a40;">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>passwords.txt</h2>
+            </div>
+            <div class="warning-message" style="border-color:#3a2a40; background:rgba(150,110,170,0.08); color:#d9c6e3;">
+                Maya dumped a password list before she locked the node.<br>
+                <strong>Zara's password is hiding in one of these.</strong> Brute-force the login with it.
+            </div>
+            <pre id="passwords-list" style="max-height:300px; overflow:auto; background:#0a070d; border:1px solid #3a2a40; color:#cdbcd6; padding:12px 14px; font-family:'Courier Prime',monospace; font-size:0.82rem; line-height:1.5; margin:14px 0;">loading&hellip;</pre>
+            <a href="/passwords.txt" download class="ctf-target" style="display:inline-block; padding:6px 12px;">&#11015; download passwords.txt</a>
         </div>
     </div>
 
