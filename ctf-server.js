@@ -9,8 +9,8 @@
 //   POST /vault-7a9/login     -> username=zara & password=3rdparty => 200 + DROWN
 //                                 anything else                    => 401 + "Invalid credentials"
 //
-// '3rdparty' is an entry in /usr/share/wordlists/common.txt (line ~172), so the
-// login is brute-forceable with ffuf / hydra / wfuzz / Burp Intruder.
+// '3rdparty' is an entry in the custom /vault_wordlist.txt (75 candidates, line 36),
+// linked from the Ch5 brief, so the login is brute-forceable with ffuf / hydra / Burp.
 
 const http = require('http');
 const fs = require('fs');

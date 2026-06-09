@@ -7,7 +7,7 @@
 // The hidden path is disclosed by the static /robots.txt.
 //
 //   username = zara
-//   password = 3rdparty   (an entry in common.txt, so it is brute-forceable)
+//   password = 3rdparty   (an entry in /vault_wordlist.txt, so it is brute-forceable)
 //
 // Wrong creds  -> 401 + "Invalid credentials"
 // Right creds  -> 200 + the recovered fragment (DROWN)
