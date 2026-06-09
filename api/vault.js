@@ -7,14 +7,14 @@
 // The hidden path is disclosed by the static /robots.txt.
 //
 //   username = zara
-//   password = mirror   (an entry in common.txt, so it is brute-forceable)
+//   password = 3rdparty   (an entry in common.txt, so it is brute-forceable)
 //
 // Wrong creds  -> 401 + "Invalid credentials"
 // Right creds  -> 200 + the recovered fragment (DROWN)
 
 const HIDDEN_PATH = '/vault-7a9';
 const CTF_USER = 'zara';
-const CTF_PASS = 'mirror';
+const CTF_PASS = '3rdparty';
 const FRAGMENT = 'DROWN';
 
 const PAGE_SHELL = (inner) => `<!DOCTYPE html><html><head><meta charset="utf-8">

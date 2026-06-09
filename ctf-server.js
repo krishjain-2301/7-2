@@ -6,10 +6,10 @@
 // Challenge flow:
 //   GET  /robots.txt          -> discloses Disallow: /vault-7a9/
 //   GET  /vault-7a9/          -> login form
-//   POST /vault-7a9/login     -> username=zara & password=mirror  => 200 + DROWN
+//   POST /vault-7a9/login     -> username=zara & password=3rdparty => 200 + DROWN
 //                                 anything else                    => 401 + "Invalid credentials"
 //
-// 'mirror' is an entry in /usr/share/wordlists/common.txt (line ~2705), so the
+// '3rdparty' is an entry in /usr/share/wordlists/common.txt (line ~172), so the
 // login is brute-forceable with ffuf / hydra / wfuzz / Burp Intruder.
 
 const http = require('http');
@@ -22,7 +22,7 @@ const PORT = 8000;
 
 const HIDDEN_PATH = '/vault-7a9';
 const CTF_USER = 'zara';
-const CTF_PASS = 'mirror';
+const CTF_PASS = '3rdparty';
 const FRAGMENT = 'DROWN';
 
 const MIME = {

@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- Challenge 1 is the web-CTF (ctf-server.js locally / api/vault.js on Vercel) ----
-    // (robots.txt -> /vault-7a9/ -> brute-force login zara:mirror -> reveals DROWN)
+    // (robots.txt -> /vault-7a9/ -> brute-force login zara:3rdparty -> reveals DROWN)
     // The brief lives in #modal-board; the answer is entered at quiz stage 'fragment'.
     // Show the CTF target relative to wherever the game is actually served.
     const ctfLink = document.getElementById('ctf-target-link');
