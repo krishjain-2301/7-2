@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS — Sign In or Create Account</title>
+    <meta name="description" content="Sign in or create your OSIRIS account to begin the murder mystery investigation.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+
+    <!-- Supabase JS v2 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --red:      #8a0303;
+            --red-dim:  rgba(138, 3, 3, 0.45);
+            --green:    #4af626;
+            --bg:       #030304;
+            --bg-card:  #080810;
+            --text-h:   #e8e8e8;
+            --text-b:   rgba(255, 255, 255, 0.72);
+            --text-d:   rgba(255, 255, 255, 0.38);
+            --border:   rgba(138, 3, 3, 0.18);
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Outfit', sans-serif;
+            --font-typewriter: 'Space Mono', monospace;
+        }
+
+        body.login-body {
+            background-color: var(--bg);
+            overflow: hidden;
+            height: 100vh;
+        }
+        body.login-body::before { display: none; }
+
+        /* No reddish glow — pure black atmosphere */
+        .bg-glow { display: none; }
+
+        /* Scanlines */
+        .scanlines {
+            position: fixed; inset: 0; pointer-events: none; z-index: 1;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
+        }
+
+        /* ===== SPLIT LAYOUT ===== */
+        .login-split {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            height: 100vh;
+        }
+
+        /* ===== LEFT PANEL ===== */
+        .login-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 44px 52px;
+            border-right: 1px solid rgba(196,26,26,0.12);
+            overflow: hidden;
+        }
+
+        .left-logo {
+            font-family: var(--font-typewriter);
+            font-size: 1.05rem;
+            color: var(--text-h);
+            letter-spacing: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 14px;
+        }
+        .left-logo em { color: var(--red); font-style: normal; }
+
+        .left-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-typewriter);
+            font-size: 0.6rem;
+            color: var(--green);
+            border: 1px solid rgba(74,246,38,0.22);
+            padding: 5px 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .badge-dot {
+            width: 5px; height: 5px;
+            background: var(--green); border-radius: 50%;
+            animation: dotPulse 2s infinite;
+            box-shadow: 0 0 5px var(--green); flex-shrink: 0;
+        }
+        @keyframes dotPulse {
+            0%,100% { box-shadow: 0 0 5px var(--green); }
+            50%      { box-shadow: none; opacity: 0.3; }
+        }
+
+        /* Center story area */
+        .left-center {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px 0;
+        }
+
+        .left-case-id {
+            font-family: var(--font-typewriter);
+            font-size: 0.6rem;
+            color: var(--red);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 22px;
+        }
+
+        .left-headline {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+            color: var(--text-h);
+            line-height: 1.5;
+            font-style: italic;
+            margin-bottom: 26px;
+        }
+        .left-headline em { color: var(--red); font-style: normal; }
+
+        /* Quote block */
+        .left-quote {
+            border-left: 2px solid rgba(196,26,26,0.45);
+            padding-left: 18px;
+            margin-bottom: 34px;
+        }
+        .left-quote p {
+            font-family: var(--font-serif);
+            font-size: 0.98rem;
+            color: var(--text-b);
+            line-height: 1.85;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        .left-quote cite {
+            font-family: var(--font-typewriter);
+            font-size: 0.58rem;
+            color: var(--red);
+            opacity: 0.7;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-style: normal;
+        }
+
+        .left-files-label {
+            font-family: var(--font-typewriter);
+            font-size: 0.58rem;
+            color: var(--text-d);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 13px;
+        }
+
+        .left-file-list {
+            list-style: none; padding: 0; margin: 0;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .left-file-list li {
+            font-family: var(--font-typewriter);
+            font-size: 0.7rem;
+            color: var(--text-b);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .fl-badge {
+            font-size: 0.54rem;
+            letter-spacing: 2px;
+            padding: 2px 8px;
+        }
+        .fl-ok  { color: var(--green); border: 1px solid rgba(74,246,38,0.2); }
+        .fl-dmg { color: var(--red);   border: 1px solid rgba(196,26,26,0.22); }
+
+        .left-warning {
+            font-family: var(--font-typewriter);
+            font-size: 0.58rem;
+            color: var(--text-d);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding-top: 18px;
+            line-height: 1.8;
+        }
+
+        /* ===== RIGHT PANEL ===== */
+        .login-right {
+            background: rgba(3, 3, 4, 0.98);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 50px;
+            overflow-y: auto;
+            border-left: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 370px;
+            opacity: 0;
+            animation: cardIn 0.8s ease 0.15s forwards;
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== TABS: Sign In / Sign Up ===== */
+        .auth-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .auth-tab {
+            flex: 1;
+            font-family: var(--font-typewriter);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            color: var(--text-d);
+            border: none;
+            background: transparent;
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+            margin-bottom: -1px;
+        }
+        .auth-tab.active {
+            color: var(--text-h);
+            border-bottom-color: var(--red);
+        }
+        .auth-tab:hover:not(.active) { color: var(--text-b); }
+
+        /* ===== FORM FIELDS ===== */
+        .auth-field { margin-bottom: 22px; }
+
+        .auth-label {
+            display: block;
+            font-family: var(--font-typewriter);
+            font-size: 0.6rem;
+            color: var(--text-b);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            color: var(--text-h);
+            font-family: var(--font-typewriter);
+            font-size: 0.95rem;
+            padding: 11px 0;
+            outline: none;
+            transition: border-color 0.3s, color 0.3s;
+            letter-spacing: 1px;
+        }
+        .auth-input:focus    { border-bottom-color: var(--red); color: #fff; }
+        .auth-input.err      { border-bottom-color: var(--red) !important; color: rgba(220,80,80,0.8) !important; }
+        .auth-input::placeholder { color: rgba(255,255,255,0.12); font-size: 0.85rem; letter-spacing: 2px; }
+
+        /* ===== SUBMIT BTN ===== */
+        .auth-submit {
+            width: 100%;
+            background: transparent;
+            border: 1px solid rgba(138, 3, 3, 0.5);
+            color: var(--red);
+            font-family: var(--font-typewriter);
+            font-size: 0.82rem;
+            letter-spacing: 5px;
+            padding: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 12px;
+            transition: border-color 0.35s, letter-spacing 0.35s, background 0.35s, text-shadow 0.35s;
+            position: relative;
+            overflow: hidden;
+        }
+        .auth-submit::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(138, 3, 3, 0.1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .auth-submit:hover:not(:disabled)::before { transform: scaleX(1); }
+        .auth-submit:hover:not(:disabled) {
+            border-color: var(--red);
+            letter-spacing: 7px;
+            text-shadow: 0 0 12px rgba(138, 3, 3, 0.3);
+        }
+        .auth-submit:disabled { opacity: 0.38; cursor: not-allowed; }
+
+        /* ===== OR DIVIDER ===== */
+        .or-row {
+            display: flex; align-items: center; gap: 12px; margin: 20px 0;
+        }
+        .or-row::before, .or-row::after {
+            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.07);
+        }
+        .or-row span {
+            font-family: var(--font-typewriter);
+            font-size: 0.58rem;
+            color: var(--text-d);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* ===== GOOGLE BTN ===== */
+        .google-btn {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-b);
+            font-family: var(--font-typewriter);
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            padding: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .google-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.22);
+            color: var(--text-h);
+        }
+        .google-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        /* ===== ERROR ===== */
+        .auth-error {
+            font-family: var(--font-typewriter);
+            font-size: 0.7rem;
+            color: var(--red);
+            letter-spacing: 1px;
+            text-align: center;
+            min-height: 18px;
+            margin-top: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-transform: uppercase;
+        }
+        .auth-error.show { opacity: 1; }
+
+        /* Success message */
+        .auth-success {
+            font-family: var(--font-typewriter);
+            font-size: 0.7rem;
+            color: var(--green);
+            letter-spacing: 1px;
+            text-align: center;
+            min-height: 18px;
+            margin-top: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .auth-success.show { opacity: 1; }
+
+        /* ===== SWITCH LINK ===== */
+        .auth-switch {
+            display: block;
+            text-align: center;
+            margin-top: 24px;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            color: var(--text-d);
+            line-height: 1.6;
+        }
+        .auth-switch a {
+            color: var(--red);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .auth-switch a:hover { color: #e02020; }
+
+        .auth-back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-family: var(--font-typewriter);
+            font-size: 0.6rem;
+            color: var(--text-d);
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .auth-back:hover { color: var(--text-b); }
+
+        /* ===== SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 10px; height: 10px;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Hide/show form panels */
+        .form-panel { display: none; }
+        .form-panel.active { display: block; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 820px) {
+            .login-split { grid-template-columns: 1fr; }
+            .login-left  { display: none; }
+            .login-right { padding: 40px 28px; }
+        }
+    </style>
+</head>
+<body class="login-body">
+
+    <div class="bg-glow"   aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <div class="login-split">
+
+        <!-- ==============================
+             LEFT — Atmospheric Story Panel
+             ============================== -->
+        <aside class="login-left" aria-label="Case context">
+
+            <div>
+                <a href="landing.html" class="left-logo"><em>OSIRIS</em> //</a><br>
+                <span class="left-badge">
+                    <span class="badge-dot" aria-hidden="true"></span>
+                    Murder Mystery &times; CTF
+                </span>
+            </div>
+
+            <div class="left-center">
+                <p class="left-case-id">Case #008 // Restricted</p>
+
+                <h2 class="left-headline">
+                    A student died.<br>
+                    The university said <em>suicide</em>.<br>
+                    The files said otherwise.
+                </h2>
+
+                <div class="left-quote">
+                    <p>"If you're reading this, then I was right.<br>Or dead. Hopefully the first one."</p>
+                    <cite>— Maya Verma, Diary Entry, October 11</cite>
+                </div>
+
+                <p class="left-files-label">Evidence awaiting your analysis</p>
+                <ul class="left-file-list">
+                    <li>📄 Maya_Diary_001.txt <span class="fl-badge fl-ok">recovered</span></li>
+                    <li>🖼 IMG_1038.jp_ <span class="fl-badge fl-dmg">corrupted</span></li>
+                    <li>📦 Confidential.zip <span class="fl-badge fl-dmg">encrypted</span></li>
+                    <li>🔊 voice_note_transcript.txt <span class="fl-badge fl-ok">recovered</span></li>
+                    <li>🌐 server_logs <span class="fl-badge fl-dmg">redacted</span></li>
+                </ul>
+            </div>
+
+            <p class="left-warning">
+                Unauthorized access to this system will be prosecuted.<br>
+                All sessions are logged and monitored.
+            </p>
+
+        </aside>
+
+        <!-- ==============================
+             RIGHT — Auth Form
+             ============================== -->
+        <main class="login-right" aria-label="Sign in or create account">
+            <div class="auth-card">
+
+                <!-- Tabs -->
+                <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+                    <button
+                        class="auth-tab active"
+                        id="tab-signin"
+                        role="tab"
+                        aria-selected="true"
+                        aria-controls="panel-signin"
+                    >Sign In</button>
+                    <button
+                        class="auth-tab"
+                        id="tab-signup"
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="panel-signup"
+                    >Create Account</button>
+                </div>
+
+                <!-- ── SIGN IN PANEL ── -->
+                <div class="form-panel active" id="panel-signin" role="tabpanel" aria-labelledby="tab-signin">
+                    <form id="signin-form" novalidate autocomplete="off">
+                        <div class="auth-field">
+                            <label for="si-email" class="auth-label">Email</label>
+                            <input type="email" id="si-email" class="auth-input" placeholder="your@email.com" required autocomplete="off" spellcheck="false">
+                        </div>
+                        <div class="auth-field">
+                            <label for="si-password" class="auth-label">Password</label>
+                            <input type="password" id="si-password" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+                        </div>
+                        <button type="submit" id="si-submit" class="auth-submit">[ Sign In ]</button>
+                    </form>
+
+                    <div class="or-row"><span>or</span></div>
+
+                    <button id="si-google" class="google-btn" type="button" aria-label="Continue with Google">
+                        <svg width="15" height="15" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908C16.658 14.123 17.64 11.815 17.64 9.2z" fill="#4285F4"/>
+                            <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+                            <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+                            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+
+                    <p class="auth-error"   id="si-error"   role="alert" aria-live="assertive"></p>
+
+                    <p class="auth-switch">
+                        New here? <a href="#" id="switch-to-signup">Create a free account →</a>
+                    </p>
+                </div>
+
+                <!-- ── SIGN UP PANEL ── -->
+                <div class="form-panel" id="panel-signup" role="tabpanel" aria-labelledby="tab-signup">
+                    <form id="signup-form" novalidate autocomplete="off">
+                        <div class="auth-field">
+                            <label for="su-name" class="auth-label">Your Name</label>
+                            <input type="text" id="su-name" class="auth-input" placeholder="Detective Smith" required autocomplete="off" spellcheck="false">
+                        </div>
+                        <div class="auth-field">
+                            <label for="su-email" class="auth-label">Email</label>
+                            <input type="email" id="su-email" class="auth-input" placeholder="your@email.com" required autocomplete="off" spellcheck="false">
+                        </div>
+                        <div class="auth-field">
+                            <label for="su-password" class="auth-label">Password</label>
+                            <input type="password" id="su-password" class="auth-input" placeholder="Min. 8 characters" required autocomplete="new-password">
+                        </div>
+                        <button type="submit" id="su-submit" class="auth-submit">[ Create Account ]</button>
+                    </form>
+
+                    <div class="or-row"><span>or</span></div>
+
+                    <button id="su-google" class="google-btn" type="button" aria-label="Continue with Google">
+                        <svg width="15" height="15" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908C16.658 14.123 17.64 11.815 17.64 9.2z" fill="#4285F4"/>
+                            <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+                            <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+                            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+
+                    <p class="auth-error"   id="su-error"   role="alert" aria-live="assertive"></p>
+                    <p class="auth-success" id="su-success" role="status"  aria-live="polite"></p>
+
+                    <p class="auth-switch">
+                        Already have an account? <a href="#" id="switch-to-signin">Sign in →</a>
+                    </p>
+                </div>
+
+                <!-- Back link -->
+                <a href="landing.html" class="auth-back" id="auth-back-link">← Return to Archive</a>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // ---- Tab switching ----
+        const tabSignin  = document.getElementById('tab-signin');
+        const tabSignup  = document.getElementById('tab-signup');
+        const panelSignin = document.getElementById('panel-signin');
+        const panelSignup = document.getElementById('panel-signup');
+
+        function switchTab(show) {
+            const isSignin = show === 'signin';
+            tabSignin.classList.toggle('active', isSignin);
+            tabSignup.classList.toggle('active', !isSignin);
+            tabSignin.setAttribute('aria-selected', isSignin);
+            tabSignup.setAttribute('aria-selected', !isSignin);
+            panelSignin.classList.toggle('active', isSignin);
+            panelSignup.classList.toggle('active', !isSignin);
+        }
+
+        tabSignin.addEventListener('click', () => switchTab('signin'));
+        tabSignup.addEventListener('click', () => switchTab('signup'));
+
+        document.getElementById('switch-to-signup').addEventListener('click', e => { e.preventDefault(); switchTab('signup'); });
+        document.getElementById('switch-to-signin').addEventListener('click', e => { e.preventDefault(); switchTab('signin'); });
+
+        // ---- Check URL param to auto-switch to signup ----
+        if (new URLSearchParams(location.search).get('mode') === 'signup') switchTab('signup');
+    </script>
+</body>
+</html>

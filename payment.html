@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS — Unlock Access</title>
+    <meta name="description" content="Complete your payment to unlock the full OSIRIS investigation.">
+    <meta name="robots" content="noindex">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Razorpay -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --red:    #8a0303;
+            --green:  #4af626;
+            --bg:     #030304;
+            --text-h: #e8e8e8;
+            --text-d:   rgba(255, 255, 255, 0.35);
+            --border-w: rgba(255, 255, 255, 0.08);
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Outfit', sans-serif;
+            --font-typewriter: 'Space Mono', monospace;
+        }
+
+        body {
+            background: var(--bg) url('bg.png') center/cover no-repeat fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-h);
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 3, 4, 0.92);
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ===== CARD ===== */
+        .pay-card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 480px;
+            padding: 50px 50px 44px;
+            background: rgba(5, 5, 8, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            margin: 40px 20px;
+            opacity: 0;
+            animation: cardIn 0.7s ease 0.1s forwards;
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== HEADER ===== */
+        .pay-logo {
+            font-family: var(--font-typewriter);
+            font-size: 0.9rem;
+            letter-spacing: 8px;
+            color: var(--text-d);
+            margin-bottom: 28px;
+            display: block;
+            text-decoration: none;
+        }
+        .pay-logo em { color: var(--red); font-style: normal; }
+
+        .pay-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-typewriter);
+            font-size: 0.6rem;
+            color: var(--red);
+            border: 1px solid rgba(138, 3, 3, 0.3);
+            padding: 5px 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        .pay-title {
+            font-family: var(--font-serif);
+            font-size: 1.65rem;
+            color: var(--text-h);
+            font-style: italic;
+            line-height: 1.45;
+            margin-bottom: 10px;
+        }
+
+        .pay-sub {
+            font-family: var(--font-sans);
+            font-size: 0.88rem;
+            color: var(--text-b);
+            line-height: 1.75;
+            margin-bottom: 32px;
+        }
+
+        /* ===== DIVIDER ===== */
+        .pay-divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            margin-bottom: 28px;
+        }
+
+        /* ===== PRICE BLOCK ===== */
+        .pay-price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .pay-price-label {
+            font-family: var(--font-typewriter);
+            font-size: 0.62rem;
+            color: var(--text-d);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .pay-price-val {
+            font-family: var(--font-sans);
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-h);
+        }
+        .pay-price-note {
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            color: var(--text-d);
+            margin-bottom: 28px;
+        }
+
+        /* ===== FEATURES ===== */
+        .pay-features {
+            list-style: none;
+            margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .pay-features li {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--text-b);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .pay-features li::before {
+            content: '✓';
+            color: var(--green);
+            font-size: 0.8rem;
+            opacity: 0.8;
+            flex-shrink: 0;
+        }
+
+        /* ===== PAY BUTTON ===== */
+        .pay-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid rgba(138, 3, 3, 0.5);
+            color: var(--red);
+            font-family: var(--font-typewriter);
+            font-size: 0.85rem;
+            letter-spacing: 5px;
+            padding: 18px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: border-color 0.35s, letter-spacing 0.35s, background 0.35s, text-shadow 0.35s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .pay-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(138, 3, 3, 0.08);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .pay-btn:hover::before { transform: scaleX(1); }
+        .pay-btn:hover:not(:disabled) {
+            border-color: var(--red);
+            letter-spacing: 7px;
+            text-shadow: 0 0 14px rgba(138, 3, 3, 0.35);
+        }
+        .pay-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        /* ===== ALREADY PAID? ===== */
+        .pay-note {
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            color: var(--text-d);
+            text-align: center;
+            line-height: 1.6;
+        }
+        .pay-note a {
+            color: rgba(138, 3, 3, 0.75);
+            text-decoration: none;
+        }
+        .pay-note a:hover { color: var(--red); }
+
+        /* ===== STATUS MESSAGES ===== */
+        .pay-msg {
+            font-family: var(--font-typewriter);
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            text-align: center;
+            min-height: 20px;
+            margin-top: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-transform: uppercase;
+        }
+        .pay-msg.show { opacity: 1; }
+        .pay-msg.err  { color: var(--red); }
+        .pay-msg.ok   { color: var(--green); }
+
+        /* ===== SUCCESS STATE ===== */
+        .pay-success-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .pay-success-overlay.show { display: flex; }
+
+        .pso-title {
+            font-family: var(--font-typewriter);
+            font-size: 0.65rem;
+            color: var(--green);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .pso-headline {
+            font-family: var(--font-serif);
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            color: var(--text-h);
+            font-style: italic;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        .pso-sub {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--text-b);
+            margin-bottom: 36px;
+        }
+        .pso-cta {
+            font-family: var(--font-typewriter);
+            font-size: 0.82rem;
+            color: var(--red);
+            border: 1px solid rgba(138, 3, 3, 0.5);
+            padding: 16px 44px;
+            text-decoration: none;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: border-color 0.35s, letter-spacing 0.35s;
+        }
+        .pso-cta:hover { border-color: var(--red); letter-spacing: 6px; }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 10px; height: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-top-color: var(--red);
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* User badge top-right */
+        .user-badge {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            z-index: 100;
+            font-family: var(--font-typewriter);
+            font-size: 0.6rem;
+            color: var(--text-d);
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-badge-sign-out {
+            color: rgba(138, 3, 3, 0.55);
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: var(--font-typewriter);
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .user-badge-sign-out:hover { color: var(--red); }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SUCCESS OVERLAY ===== -->
+    <div class="pay-success-overlay" id="success-overlay" aria-live="assertive">
+        <p class="pso-title">// Payment confirmed</p>
+        <h1 class="pso-headline">
+            Access granted.<br>
+            The case is open.
+        </h1>
+        <p class="pso-sub" id="success-sub">Redirecting you to the investigation…</p>
+        <a href="index.html" class="pso-cta">Begin Investigation →</a>
+    </div>
+
+    <!-- ===== USER BADGE ===== -->
+    <div class="user-badge" id="user-badge">
+        <span id="user-email-display"></span>
+        <button class="user-badge-sign-out" id="sign-out-btn" type="button">Sign Out</button>
+    </div>
+
+    <!-- ===== PAYMENT CARD ===== -->
+    <div class="pay-card" role="main">
+        <a href="landing.html" class="pay-logo"><em>OSIRIS</em> //</a>
+
+        <span class="pay-status">⚠ Payment Required</span>
+
+        <h2 class="pay-title">
+            You're in the archive.<br>
+            Now open the case.
+        </h2>
+        <p class="pay-sub">
+            Your account is ready. One payment unlocks the full investigation — all chapters, all evidence, lifetime access.
+        </p>
+
+        <div class="pay-divider"></div>
+
+        <div class="pay-price-row">
+            <span class="pay-price-label">Full Investigation Access</span>
+            <span class="pay-price-val" id="price-display">$1.50</span>
+        </div>
+        <p class="pay-price-note">One-time payment · No subscription · Yours forever</p>
+
+        <ul class="pay-features">
+            <li>All 6+ story chapters — unlocked immediately</li>
+            <li>6 real CTF challenges (steganography, OSINT, cryptography & more)</li>
+            <li>Beginner hint system — never get permanently stuck</li>
+            <li>Digital completion certificate</li>
+            <li>Lifetime access — revisit any time</li>
+        </ul>
+
+        <button class="pay-btn" id="pay-btn" type="button">
+            [ Unlock Access — $1.50 ]
+        </button>
+
+        <p class="pay-note">
+            Already paid from a different account?
+            <a href="mailto:support@osiris.game">Contact support →</a>
+        </p>
+
+        <p class="pay-msg" id="pay-msg"></p>
+    </div>
+
+    <script>
+    // ============================================================
+    // Configuration — replace with your actual values
+    // ============================================================
+    const SUPABASE_URL        = 'https://rbfjazaxaaasgpeayobi.supabase.co';
+    const SUPABASE_ANON_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiZmphemF4YWFhc2dwZWF5b2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNjE5NDIsImV4cCI6MjA5NjkzNzk0Mn0.gMMhrgBqBDMK_2YIKGN-1Ky5cccvN5ab_sIAYfhhj3k';
+    const RAZORPAY_KEY_ID     = 'YOUR_RAZORPAY_KEY_ID';    // 🔧 From Razorpay Dashboard → Settings → API Keys
+    const PAYMENT_AMOUNT_PAISE = 150;                      // $1.50 = 150 cents (Stripe/Razorpay equivalent)
+    const POST_PAYMENT_URL    = 'index.html';
+    // ============================================================
+
+    const { createClient } = window.supabase;
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+
+    // ---- Helpers ----
+    function showMsg(msg, type = 'err') {
+        const el = document.getElementById('pay-msg');
+        el.textContent = msg;
+        el.className = `pay-msg show ${type}`;
+    }
+
+    function clearMsg() {
+        const el = document.getElementById('pay-msg');
+        el.textContent = '';
+        el.classList.remove('show');
+    }
+
+    function showSuccess() {
+        document.getElementById('success-overlay').classList.add('show');
+        setTimeout(() => { window.location.replace(POST_PAYMENT_URL); }, 3200);
+    }
+
+    // ---- On load: verify session ----
+    (async function init() {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (!session) {
+            window.location.replace('login.html');
+            return;
+        }
+
+        currentUser = session.user;
+        const emailEl = document.getElementById('user-email-display');
+        if (emailEl) emailEl.textContent = currentUser.email;
+
+        // If already paid, skip to game
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('has_paid')
+            .eq('id', currentUser.id)
+            .single();
+
+        if (profile?.has_paid) {
+            window.location.replace(POST_PAYMENT_URL);
+        }
+    })();
+
+    // ---- Sign out ----
+    document.getElementById('sign-out-btn').addEventListener('click', async () => {
+        await supabase.auth.signOut();
+        window.location.replace('login.html');
+    });
+
+    // ---- Mark user as paid in Supabase ----
+    async function markAsPaid(paymentId) {
+        const { error } = await supabase
+            .from('profiles')
+            .update({
+                has_paid:   true,
+                paid_at:    new Date().toISOString(),
+                payment_id: paymentId,
+            })
+            .eq('id', currentUser.id);
+
+        if (error) {
+            console.error('[OSIRIS Payment] Supabase update failed:', error);
+            showMsg('Payment received but access update failed. Contact support with your payment ID: ' + paymentId);
+            return false;
+        }
+        return true;
+    }
+
+    // ---- Razorpay Checkout ----
+    document.getElementById('pay-btn').addEventListener('click', () => {
+        clearMsg();
+
+        if (!currentUser) {
+            showMsg('Session expired. Please sign in again.');
+            setTimeout(() => window.location.replace('login.html'), 1500);
+            return;
+        }
+
+        if (RAZORPAY_KEY_ID === 'YOUR_RAZORPAY_KEY_ID') {
+            // Dev mode: simulate payment
+            showMsg('Dev mode: simulating payment...', 'ok');
+            setTimeout(async () => {
+                const ok = await markAsPaid('dev_payment_' + Date.now());
+                if (ok) showSuccess();
+            }, 1000);
+            return;
+        }
+
+        const options = {
+            key:         RAZORPAY_KEY_ID,
+            amount:      PAYMENT_AMOUNT_PAISE,
+            currency:    'USD',
+            name:        'OSIRIS',
+            description: 'Full Investigation Access — Case #008',
+            image:       '',
+            prefill: {
+                email: currentUser.email,
+            },
+            theme: {
+                color: '#8a0303',
+                backdrop_color: '#030304',
+            },
+            modal: {
+                ondismiss: () => {
+                    showMsg('Payment cancelled. Your progress is saved — try again when ready.');
+                },
+            },
+            handler: async function(response) {
+                // response.razorpay_payment_id is available here
+                // For production: verify signature on your server/edge function first
+                const btn = document.getElementById('pay-btn');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Unlocking access...';
+
+                const paymentId = response.razorpay_payment_id;
+                const ok = await markAsPaid(paymentId);
+
+                if (ok) {
+                    showSuccess();
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = '[ Retry Unlock ]';
+                }
+            },
+        };
+
+        try {
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function(response) {
+                showMsg('Payment failed: ' + (response.error?.description || 'Unknown error. Try again.'));
+            });
+            rzp.open();
+        } catch (e) {
+            showMsg('Could not load payment gateway. Check your internet connection.');
+            console.error('[OSIRIS Payment] Razorpay error:', e);
+        }
+    });
+    </script>
+
+</body>
+</html>
