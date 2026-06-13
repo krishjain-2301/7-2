@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const { error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
-                    options: { redirectTo: `${window.location.origin}/${POST_LOGIN_URL}` },
+                    options: { redirectTo: `${window.location.origin}/login.html` },
                 });
                 if (error) throw error;
                 // Browser redirects to Google — no further action needed
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const { error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
-                    options: { redirectTo: `${window.location.origin}/${POST_LOGIN_URL}` },
+                    options: { redirectTo: `${window.location.origin}/login.html` },
                 });
                 if (error) throw error;
             } catch (err) {
