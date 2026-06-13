@@ -20,7 +20,7 @@
 
 const SUPABASE_URL      = 'https://rbfjazaxaaasgpeayobi.supabase.co';       // 🔧 Replace
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiZmphemF4YWFhc2dwZWF5b2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNjE5NDIsImV4cCI6MjA5NjkzNzk0Mn0.gMMhrgBqBDMK_2YIKGN-1Ky5cccvN5ab_sIAYfhhj3k';  // 🔧 Replace
-const POST_LOGIN_URL    = 'index.html';               // Where to go after login
+const POST_LOGIN_URL    = 'game.html';               // Where to go after login
 
 // ---- Init Supabase client ----
 const { createClient } = window.supabase;

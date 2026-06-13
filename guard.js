@@ -62,8 +62,9 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiZmphemF4YWFhc2dwZWF5b2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzNjE5NDIsImV4cCI6MjA5NjkzNzk0Mn0.gMMhrgBqBDMK_2YIKGN-1Ky5cccvN5ab_sIAYfhhj3k';
 
     // Pages to redirect to
-    const LOGIN_URL   = 'login.html';
-    const PAYMENT_URL = 'payment.html';
+    const LOGIN_URL        = 'login.html';
+    const POST_PAYMENT_URL = 'payment.html';
+    const POST_LOGIN_URL   = 'game.html';
 
     // ---- Show a blocking overlay immediately so users don't see page flash ----
     const overlay = document.createElement('div');
