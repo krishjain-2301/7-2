@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/", "destination": "/landing.html" },
     { "source": "/vault-7a9", "destination": "/api/vault" },
     { "source": "/vault-7a9/", "destination": "/api/vault" },
     { "source": "/vault-7a9/login", "destination": "/api/vault" }
