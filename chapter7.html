@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSIRIS // CASE #008 - CH.07</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body.archive-body {
+            --font-typewriter: 'Courier Prime', 'Courier New', monospace;
+        }
+        body.archive-body .diary-text p,
+        body.archive-body .diary-text h3 {
+            line-height: 1.75;
+            letter-spacing: 0.2px;
+        }
+
+        /* Binary Exploitation — Crash dump / memory viewer */
+        .crash-shell {
+            background: #050505;
+            border: 1px solid #1a1a1a;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            overflow: hidden;
+        }
+        .crash-titlebar {
+            background: #0f0f0f;
+            border-bottom: 1px solid #1a1a1a;
+            padding: 8px 14px;
+            color: #ff5555;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .crash-titlebar::before { content: "⬤"; color: #ff5f57; }
+        .crash-body { padding: 16px 20px; overflow-x: auto; }
+        .crash-line { line-height: 1.9; white-space: pre; color: #9fe89f; }
+        .crash-line .off  { color: #555; }
+        .crash-line .hex  { color: #9fe89f; }
+        .crash-line .hex-hi { color: #ffff55; font-weight: bold; }   /* highlighted bytes */
+        .crash-line .asc  { color: #888; }
+        .crash-line .asc-hi { color: #ff8c00; font-weight: bold; }  /* ASCII fragment */
+        .crash-sep { color: #2a2a2a; margin: 8px 0; }
+        .crash-note { color: #ff4444; font-size: 0.78rem; }
+        .crash-ok   { color: #4af626; font-size: 0.78rem; }
+
+        /* Exploit input area */
+        .exploit-lab {
+            background: #050505;
+            border: 1px solid #1a1a1a;
+            margin-top: 18px;
+            padding: 18px 20px;
+            font-family: 'Courier Prime', monospace;
+        }
+        .exploit-lab-head {
+            color: #ff4444;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 8px;
+        }
+        .exploit-hint {
+            color: #555;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+        .exploit-hint strong { color: #888; }
+        .exploit-hint code   { color: #ffff55; background: rgba(255,255,0,0.04); padding: 1px 5px; }
+        .exploit-q {
+            color: #ff8c00;
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .exploit-input {
+            width: 100%;
+            background: #000;
+            border: 1px solid #ff4444;
+            color: #ff8c00;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.95rem;
+            padding: 10px 14px;
+            outline: none;
+            letter-spacing: 2px;
+        }
+        .exploit-input:focus { box-shadow: 0 0 0 1px rgba(255,68,68,0.3); }
+        .exploit-btn {
+            margin-top: 10px;
+            background: transparent;
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.85rem;
+            padding: 8px 20px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.25s;
+        }
+        .exploit-btn:hover { background: rgba(255,68,68,0.1); }
+        .exploit-error { color: var(--color-blood); font-size: 0.82rem; margin-top: 8px; min-height: 18px; }
+
+        /* Recording log transcript */
+        .rec-log {
+            background: #080808;
+            border: 1px solid #1a1a1a;
+            padding: 18px 20px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.84rem;
+            line-height: 1.8;
+            color: #888;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+        .rec-log .ts   { color: #444; }
+        .rec-log .sys  { color: #ff4444; }
+        .rec-log .user { color: #aaa; }
+        .rec-log .priv { color: var(--color-terminal); }
+    </style>
+</head>
+
+<body class="archive-body">
+    <div class="hidden-clue">he thought the truth was a weapon. he forgot it could recoil.</div>
+
+    <div id="caseboard-container">
+        <header class="case-header">
+            <h1 class="case-title stamp-effect">CASE #008 // CH.07</h1>
+            <div class="case-meta-grid">
+                <div class="meta-column">
+                    <span>Subject: <span class="highlight-red">MARCUS CHEN</span></span>
+                    <span>Status: <span class="highlight-green">OPEN</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Recovered from: <span class="highlight-terminal">MAYA VERMA'S LAPTOP</span></span>
+                    <span>Memory Integrity: <span class="highlight-red">01%</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Trigger: <span class="highlight-terminal">THE LEAK / PROF. MEHTA</span></span>
+                    <span>Classification: <span class="highlight-red">[REDACTED]</span></span>
+                </div>
+            </div>
+        </header>
+
+        <h2 class="section-title">Recovered Files</h2>
+
+        <div class="warning-message">
+            <strong>WARNING</strong><br>
+            Marcus built a recording system to harvest private conversations.<br>
+            The system crashed. The memory dump is all that's left.<br>
+            <strong>Analyse the overflow. Read what it exposed.</strong>
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-item file-card" id="btn-diary10">
+                <span class="icon">&#128196;</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_010.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-transcript">
+                <span class="icon">&#127908;</span>
+                <div class="file-details">
+                    <span class="filename">recording_log_011.txt</span>
+                    <span class="file-meta highlight-red">[LEAKED]</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card corrupted" id="btn-dump">
+                <span class="icon">&#128165;</span>
+                <div class="file-details">
+                    <span class="filename">recording_system.core</span>
+                    <span class="file-meta highlight-red">[OVERFLOW CRASH]</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-obituary">
+                <span class="icon">&#128209;</span>
+                <div class="file-details">
+                    <span class="filename">mehta_notice.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card encrypted" id="btn-marcus">
+                <span class="icon">&#128193;</span>
+                <div class="file-details">
+                    <span class="filename">Marcus</span>
+                    <span class="file-meta highlight-terminal">Encrypted</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-note" style="display: none;">
+                <span class="icon">&#128221;</span>
+                <div class="file-details">
+                    <span class="filename">maya_note.txt</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="investigation-quiz" class="investigation-quiz">
+            <label for="investigation-input" class="quiz-label">Whose career did Marcus's leak destroy?</label>
+            <div class="input-row">
+                <input type="text" id="investigation-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="_">
+                <button id="submit-investigation" class="terminal-btn">SUBMIT</button>
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
+
+        <footer class="file-status-footer" id="case-footer">
+            <div style="display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%;">
+                <div class="status-box recovered">
+                    <span>RECOVERED FILES:</span>
+                    <span class="count" id="count-recovered">6</span>
+                </div>
+                <div class="status-box locked">
+                    <span style="color: var(--color-blood);">LOCKED FILES:</span>
+                    <span class="count" id="count-locked" style="color: var(--color-blood);">4</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Diary 010 -->
+    <div id="modal-diary10" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal">&times;</button>
+            <div class="diary-text">
+                <h3>December 05</h3>
+                <p>Marcus had a system.</p>
+                <p>He called it a "documentation project."</p>
+                <p>It was a recording app he wrote himself.</p>
+                <br>
+                <p>He'd leave his phone near conversations he wasn't invited to.</p>
+                <p>Log them. Annotate them. Archive them.</p>
+                <p>Over three years, he built a library of other people's private moments.</p>
+                <br>
+                <p>The one he leaked was Prof. Mehta's.</p>
+                <p>A session recording — private, unguarded, not meant for anyone.</p>
+                <p>Marcus published it anonymously on three forums.</p>
+                <br>
+                <p>Mehta was fired within the week.</p>
+                <p>The university opened a conduct review.</p>
+                <p>Two months later, Mehta was dead.</p>
+                <br>
+                <p>Marcus's system crashed the night of the leak.</p>
+                <p>The core dump is the only thing that survived.</p>
+                <p>The overflow exposed something he never meant to share.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recording log transcript -->
+    <div id="modal-transcript" class="modal">
+        <div class="modal-content osint-content" style="max-width:740px; width:94vw; background:#080808; border-color:#1a1a1a;">
+            <button class="close-modal" style="color:#555;">&times;</button>
+            <div class="folder-header">
+                <h2 style="color:#ff4444;">recording_log_011.txt — LEAKED</h2>
+            </div>
+            <div class="rec-log">
+<span class="ts">[2025-11-14 19:03:11]</span> <span class="sys">SYSTEM</span>  Recording session started. Alias: <span class="user">PROF_MEHTA_OFFICE</span><br>
+<span class="ts">[2025-11-14 19:03:14]</span> <span class="user">RECORDING</span> ...<br>
+<span class="ts">[2025-11-14 19:08:22]</span> <span class="priv">[SUBJECT]</span> "I don't know how much longer I can do this."<br>
+<span class="ts">[2025-11-14 19:08:45]</span> <span class="priv">[SUBJECT]</span> "The students think I have it together. I really don't."<br>
+<span class="ts">[2025-11-14 19:10:03]</span> <span class="priv">[SUBJECT]</span> "I've been thinking about leaving. Not just the job."<br>
+<span class="ts">[2025-11-14 19:10:08]</span> <span class="user">RECORDING</span> ...<br>
+<span class="ts">[2025-11-14 19:22:17]</span> <span class="sys">SYSTEM</span>  Session ended. Duration: 19m 06s.<br>
+<span class="ts">[2025-11-14 19:22:18]</span> <span class="sys">SYSTEM</span>  Note written by operator: <span style="color:#ff8c00;">"good material. this one has weight."</span><br>
+<span class="ts">[2025-11-14 19:22:30]</span> <span class="sys">SYSTEM</span>  File archived. Alias field: PROF_MEHTA_OFFICE<br>
+                <br>
+<span class="ts">[2025-11-28 02:11:04]</span> <span class="sys">SYSTEM</span>  <span style="color:#ff4444;">EXPORT TRIGGERED. Target: /tmp/leak_011.mp3</span><br>
+<span class="ts">[2025-11-28 02:11:06]</span> <span class="sys">SYSTEM</span>  <span style="color:#ff4444;">Upload initiated to 3 forum endpoints.</span><br>
+<span class="ts">[2025-11-28 02:11:14]</span> <span class="sys">SYSTEM</span>  <span style="color:#ff4444;">Upload complete. Anonymous. No attribution metadata.</span><br>
+            </div>
+        </div>
+    </div>
+
+    <!-- recording_system.core — BINARY EXPLOITATION CHALLENGE -->
+    <div id="modal-dump" class="modal">
+        <div class="modal-content osint-content" style="max-width:920px; width:96vw; background:#050505; border-color:#1a1a1a; padding:24px;">
+            <button class="close-modal" style="color:#333;">&times;</button>
+
+            <div style="color:#ff4444; font-family:'Courier Prime',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:2px; margin-bottom:14px;">
+                &#9654; CTF CATEGORY: BINARY EXPLOITATION
+            </div>
+
+            <div class="warning-message" style="border-color:#3a1a1a; background:rgba(255,68,68,0.06); color:#ff9999;">
+                Marcus's recording_system crashed during the leak. A buffer overflow corrupted the notes field.<br>
+                Notes are <strong>XOR-encoded</strong> at rest using an internal magic constant.<br>
+                <strong>Read the source. Find the key. Decrypt the overflow bytes.</strong> The fragment is not plaintext in the dump.
+            </div>
+
+            <!-- Source pseudocode -->
+            <div class="crash-shell" style="margin-bottom:14px;">
+                <div class="crash-titlebar" style="color:#ffaa44;">recording_system.py (decompiled) &nbsp;|&nbsp; forensics reconstruction</div>
+                <div class="crash-body" style="color:#aaa;">
+<div class="crash-line" style="color:#ff8888;">def log_recording(alias: str, notes: str) -&gt; None:</div>
+<div class="crash-line">    <span class="off">    </span><span style="color:#569cd6;">MAGIC</span>  = <span style="color:#b5cea8;">0x4f534953</span>   <span class="off"># integrity marker &mdash; 4 bytes</span></div>
+<div class="crash-line">    <span class="off">    </span>buf    = bytearray(<span style="color:#b5cea8;">40</span>)    <span class="off"># alias buffer: 40 bytes, FIXED</span></div>
+<div class="crash-line">    <span class="off">    </span>key    = MAGIC.to_bytes(<span style="color:#b5cea8;">4</span>, <span style="color:#ce9178;">'big'</span>)  <span class="off"># [0x4f, 0x53, 0x49, 0x53]</span></div>
+<div class="crash-line"> </div>
+<div class="crash-line">    <span class="off">    </span><span class="off"># notes are XOR-encoded before storage</span></div>
+<div class="crash-line">    <span class="off">    </span>enc_notes = bytes([b ^ key[i % <span style="color:#b5cea8;">4</span>] <span style="color:#569cd6;">for</span> i, b <span style="color:#569cd6;">in</span> enumerate(notes.encode())])</div>
+<div class="crash-line"> </div>
+<div class="crash-line" style="color:#ff5555;">    buf[:len(alias)] = alias.encode()  # [VULN] no bounds check</div>
+<div class="crash-line" style="color:#ff5555;">    # alias len=49 &gt; buf[40] &rarr; 9-byte overflow into enc_notes region</div>
+                </div>
+            </div>
+
+            <!-- Memory dump -->
+            <div class="crash-shell">
+                <div class="crash-titlebar">recording_system.core &nbsp;|&nbsp; SIGSEGV @ rip=0x0055 &nbsp;|&nbsp; forensics team analysis</div>
+                <div class="crash-body">
+<div class="crash-line"><span class="off">offset   </span><span class="off">00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f</span>  <span class="off">ASCII</span></div>
+<div class="crash-sep">────────────────────────────────────────────────────────────────────────</div>
+<div class="crash-line"><span class="off">0x0000  </span><span class="hex"> 72 65 63 5f 73 79 73 74  65 6d 5f 76 30 2e 33 2e</span>  <span class="asc">rec_system_v0.3.</span></div>
+<div class="crash-line"><span class="off">0x0010  </span><span class="hex"> 31 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00</span>  <span class="asc">1...............</span></div>
+<div class="crash-sep"> </div>
+<div class="crash-line" style="color:#ff8888;"><span class="off">  ↓ MAGIC at 0x0020 (big-endian 4-byte int, used as XOR key for notes field)</span></div>
+<div class="crash-sep"> </div>
+<div class="crash-line"><span class="off">0x0020  </span><span class="hex hex-hi"> 4f 53 49 53</span><span class="hex"> 00 00 00 00  00 00 00 00 00 00 00 00</span>  <span class="asc-hi">OSIS</span><span class="asc">............</span></div>
+<div class="crash-sep"> </div>
+<div class="crash-line" style="color:#ff8888;"><span class="off">  ↓ alias buf[40] starts 0x0030 (40 bytes). overflow threshold: 0x0030 + 0x28 = 0x0058</span></div>
+<div class="crash-sep"> </div>
+<div class="crash-line"><span class="off">0x0030  </span><span class="hex"> 50 52 4f 46 5f 4d 45 48  54 41 5f 4c 45 41 4b 00</span>  <span class="asc">PROF_MEHTA_LEAK.</span></div>
+<div class="crash-line"><span class="off">0x0040  </span><span class="hex"> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00</span>  <span class="asc">................</span></div>
+<div class="crash-line"><span class="off">0x0050  </span><span class="hex"> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00</span>  <span class="asc">................</span></div>
+<div class="crash-sep"> </div>
+<div class="crash-line" style="color:#ff8888;"><span class="off">  ↓ enc_notes field starts 0x0058. alias overflowed 9 bytes past 0x0057</span></div>
+<div class="crash-sep"> </div>
+<div class="crash-line"><span class="off">0x0058  </span><span class="hex hex-hi"> 01 1a 0e 1b 1b</span><span class="hex"> 00 00 00  00 00 00 00 00 00 00 00</span>  <span class="asc">.....</span><span class="asc">...........</span></div>
+<div class="crash-line"><span class="off">0x0068  </span><span class="hex"> 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00</span>  <span class="asc">................</span></div>
+<div class="crash-sep"> </div>
+<div class="crash-line crash-note">SIGSEGV — write beyond alias buf[40]. 9 bytes spilled into enc_notes[0x0058].</div>
+<div class="crash-line crash-ok">Forensics: overflow bytes are XOR-encoded (same scheme as all stored notes). Decrypt to read.</div>
+                </div>
+            </div>
+
+            <!-- Exploit analysis lab -->
+            <div class="exploit-lab">
+                <div class="exploit-lab-head">&#9658; DECRYPT THE OVERFLOW BYTES</div>
+                <div class="exploit-hint">
+                    The <strong>enc_notes</strong> field at <code>0x0058</code> holds XOR-encrypted data.<br>
+                    The encryption key is <strong>MAGIC</strong>, split into 4 bytes big-endian: <code>[0x4f, 0x53, 0x49, 0x53]</code> (cycling).<br>
+                    The overflow wrote 5 encrypted bytes: <code>01 1a 0e 1b 1b</code><br><br>
+                    <strong>To decrypt:</strong> XOR each byte with the key (cycling by position):<br>
+                    <code>0x01 ^ 0x4f = ?</code> &nbsp; <code>0x1a ^ 0x53 = ?</code> &nbsp; <code>0x0e ^ 0x49 = ?</code> &nbsp; <code>0x1b ^ 0x53 = ?</code> &nbsp; <code>0x1b ^ 0x4f = ?</code><br>
+                    Convert each result to ASCII. What 5-letter word do you get?
+                </div>
+                <div class="exploit-q">
+                    &#9658; Decrypt bytes <code>01 1a 0e 1b 1b</code> with key <code>[4f 53 49 53]</code> &rarr; enter the plaintext word.
+                </div>
+                <input type="text" id="exploit-input" class="exploit-input" placeholder="decrypted word" autocomplete="off" spellcheck="false" maxlength="10">
+                <div id="exploit-error" class="exploit-error"></div>
+                <button class="exploit-btn" id="exploit-btn">[ DECRYPT NOTES ]</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prof. Mehta notice -->
+    <div id="modal-obituary" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="txt-content"
+                style="background:#101418; border:1px solid #2a3138; color:#cdd3d8; font-family:var(--font-typewriter); padding:25px; line-height:1.7;">
+                <strong>IN MEMORY</strong><br>
+                <strong>Dr. Arjun Mehta</strong>, 51 &mdash; Professor of Clinical Psychology<br><br>
+                Passed January 18, 2026.<br><br>
+                Dr. Mehta's position was terminated in December following the publication of a private audio recording.
+                An internal review concluded the recording was obtained without consent.<br><br>
+                He is survived by his wife and two daughters.<br><br>
+                <i>"He trusted the room. The room had a microphone."</i><br>
+                <span style="color:#555; font-size:0.85rem;">— colleague, unnamed</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marcus folder (encrypted) -->
+    <div id="modal-marcus" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Marcus/</h2>
+            </div>
+            <div class="explorer-grid">
+                <div class="explorer-item" id="btn-marcus-dm">
+                    <span class="icon">&#128172;</span>
+                    <span class="filename">Messages (Anonymous)</span>
+                </div>
+                <div class="explorer-item" id="btn-vault">
+                    <span class="icon">&#128230;</span>
+                    <span class="filename">archive.zip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marcus DM -->
+    <div id="modal-marcus-dm" class="modal">
+        <div class="modal-content chat-content instagram-dm" style="max-width:440px; width:92vw;">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar" style="background:#222;"></div>
+                <div class="dm-info">
+                    <h2>anonymous</h2>
+                    <span class="dm-status">no account found</span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble received"><span class="text">you leaked that man's private session.</span></div>
+                <div class="dm-bubble sent"><span class="text">it was in the public interest. people should know.</span></div>
+                <div class="dm-bubble received"><span class="text">he trusted that room.</span></div>
+                <div class="dm-bubble sent"><span class="text">he shouldn't have said those things if he didn't want them out there.</span></div>
+                <div class="dm-bubble received"><span class="text">he's dead.</span></div>
+                <div class="dm-bubble sent"><span class="text">i didn't make him do that.</span></div>
+                <div class="dm-bubble received"><span class="text">you published it from three different accounts. you knew what you were doing.</span></div>
+                <div class="dm-bubble sent"><span class="text">the truth matters more than feelings.</span></div>
+                <div class="dm-bubble received"><span class="text">it mattered more than his life, apparently.</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vault key -->
+    <div id="modal-vault-key" class="modal">
+        <div class="modal-content password-prompt-content fullscreen-prompt">
+            <button class="close-modal">&times;</button>
+            <h2 class="confidential-title">archive.zip</h2>
+            <div style="margin: 20px 0; color: #666; font-family: var(--font-typewriter); font-size: 0.9rem; max-width:600px; text-align:center;">
+                SYS_NOTE: DECRYPT KEY = <strong style="color:#888;">what Marcus did with the recordings</strong><br>
+                <span style="color:#555; font-size:0.8rem;">Hint: one word. what he did to Mehta's session. (check the log)</span>
+            </div>
+            <div class="password-input-wrapper">
+                <input type="text" id="vault-input" autocomplete="off" spellcheck="false"
+                    placeholder="ENTER KEY">
+                <button id="vault-submit-btn">UNLOCK</button>
+            </div>
+            <div id="vault-error"></div>
+        </div>
+    </div>
+
+    <!-- Vault contents -->
+    <div id="modal-vault-contents" class="modal">
+        <div class="modal-content fcrack-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/archive/</h2>
+            </div>
+            <div class="fcrack-grid">
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content"
+                        style="background:#fff; color:#000; font-family:'Times New Roman', serif; font-size:0.86rem;">
+                        <strong style="font-size:1.05rem; border-bottom:2px solid #000; display:block; padding-bottom:5px; margin-bottom:10px;">INVENTORY — recording_system sessions</strong>
+                        Total archived sessions: 147<br>
+                        Consent obtained: 0<br>
+                        Sessions involving faculty: 23<br>
+                        Sessions involving peers: 118<br>
+                        Sessions involving staff: 6<br><br>
+                        <strong style="color:#a00;">Sessions leaked publicly: 1</strong><br>
+                        Session ID: 011 &mdash; Subject: Prof. Mehta
+                    </div>
+                    <span class="filename">session_inventory.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#111; border:1px solid #333; font-size:0.9rem;">
+                        <span style="color:#ff5555; font-size:0.7rem; display:block; margin-bottom:12px;">FORUM POST — RECOVERED (since deleted)</span>
+                        Posted: 2025-11-28 02:14 AM<br>
+                        Platform: 3 anonymous forums<br>
+                        Title: "Your psych prof is falling apart"<br><br>
+                        <span style="color:#666;">Content: 19-minute audio recording of Dr. Arjun Mehta during what appeared to be a private session.</span><br><br>
+                        <span style="color:#555;">Views before removal: 14,800+</span><br>
+                        <span style="color:#555;">University notified: 2025-11-29</span><br>
+                        <span style="color:#555;">Prof. Mehta terminated: 2025-12-02</span>
+                    </div>
+                    <span class="filename">leak_record.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#0d0d0d; border:1px solid #333; color:#888; font-family:monospace;">
+                        i used to think the truth was a gift.<br><br>
+                        like if enough people knew, something would change.<br><br>
+                        i don't know what i expected to change.<br><br>
+                        i just kept recording.<br>
+                        kept archiving.<br>
+                        kept looking for the thing that would matter.<br><br>
+                        i'm not sure i ever found it.<br><br>
+                        <span style="color:#9fe89f;">- unsent note from Marcus's laptop</span>
+                    </div>
+                    <span class="filename">unsent_note.txt</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- maya_note (revealed after Q1) -->
+    <div id="modal-note" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal" id="note-close-btn">&times;</button>
+            <div class="diary-text">
+                <h3>maya_note.txt</h3>
+                <p style="color:#8a0303;">Maya:</p>
+                <p>Marcus's system crashed the night of the leak. The core dump is everything that's left.</p>
+                <p>Open <strong>recording_system.core</strong>. Find the overflow region at <code>0x0058</code>.</p>
+                <br>
+                <p>The notes are <strong>not stored in plaintext</strong>. They are XOR-encoded with an internal key.</p>
+                <p>The key is the <strong>MAGIC</strong> constant — a 4-byte integer. You can find it in the dump at <code>0x0020</code>.</p>
+                <p>Split it into bytes big-endian. Apply XOR to the overflow bytes. Convert to ASCII.</p>
+                <br>
+                <p>That word is the last fragment.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Obsession summary -->
+    <div id="modal-summary" class="modal" style="z-index: 10000;">
+        <div class="modal-content"
+            style="background:#000; border:1px solid var(--color-blood); max-width:600px; padding:40px; text-align:left; font-family:var(--font-typewriter); color:#fff;">
+            <button class="close-modal" id="summary-close-btn">&times;</button>
+            <h2 style="color:var(--color-blood); border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">SUBJECT: MARCUS CHEN</h2>
+            <h3 style="color:#888; margin-bottom:30px;">CLASSIFICATION: OBSESSION</h3>
+            <div style="font-size:1.1rem; line-height:1.8;">
+                <span style="color:#555; text-transform:uppercase;">Findings:</span><br><br>
+                &gt; Built and operated a covert recording system for 3+ years.<br>
+                &gt; 147 sessions archived. Zero with consent.<br>
+                &gt; Leaked Prof. Mehta's private session to public forums.<br>
+                &gt; Mehta fired within the week. Dead within two months.<br>
+                <br>
+                <span style="color:var(--color-terminal);">&gt; The truth became more important than people. He forgot it could kill.</span>
+            </div>
+            <div id="case-confirm-btn"
+                style="margin-top:40px; text-align:center; border:1px solid var(--color-blood); color:var(--color-blood); padding:10px; font-weight:bold; letter-spacing:2px; cursor:pointer; transition:all 0.3s;"
+                onmouseover="this.style.background='var(--color-blood)'; this.style.color='#000';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--color-blood)';">
+                CASE CONFIRMED
+            </div>
+        </div>
+    </div>
+
+    <!-- Final message overlay -->
+    <div id="end-chapter-overlay" class="screen cut-screen" style="display:none; z-index: 20000;">
+        <div id="sequence-text" class="terminal-sequence"></div>
+    </div>
+
+    <script src="notify-client.js"></script>
+    <script src="chapter7.js"></script>
+</body>
+
+</html>

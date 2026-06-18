@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSIRIS // CASE #008 - CH.06 [LOCKED]</title>
+    <title>OSIRIS // CASE #008 - CH.06</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,87 +13,501 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
-        .lock-wrap {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px 20px;
-            gap: 6px;
+        body.archive-body {
+            --font-typewriter: 'Courier Prime', 'Courier New', monospace;
         }
-        .lock-glyph {
-            font-size: 4.5rem;
-            line-height: 1;
-            color: var(--color-blood);
-            text-shadow: 0 0 24px rgba(138, 3, 3, 0.6);
-            margin-bottom: 10px;
+        body.archive-body .diary-text p,
+        body.archive-body .diary-text h3 {
+            line-height: 1.75;
+            letter-spacing: 0.2px;
         }
-        .lock-sub {
-            color: var(--color-text-dim);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.8rem;
+
+        /* Phone lockscreen */
+        .phone-shell {
+            background: #0a0a0a;
+            border: 2px solid #1c1c1e;
+            border-radius: 44px;
+            width: 300px;
+            max-width: 88vw;
+            padding: 0 0 20px;
+            margin: 0 auto;
+            overflow: hidden;
+            box-shadow: 0 0 0 6px #111, 0 20px 60px rgba(0,0,0,0.9);
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
         }
-        .lock-name {
-            font-size: 3.4rem;
-            letter-spacing: 8px;
-            margin: 6px 0 4px;
+        .phone-notch { height: 28px; display: flex; align-items: center; justify-content: center; }
+        .phone-pill { width: 90px; height: 6px; background: #1c1c1e; border-radius: 3px; }
+        .phone-clock {
+            text-align: center; color: #fff; font-size: 2.8rem; font-weight: 200;
+            letter-spacing: 1px; padding: 8px 0 2px;
         }
-        .lock-readout {
-            font-family: 'Courier Prime', monospace;
-            color: #888;
-            line-height: 1.9;
-            margin: 26px 0;
-            display: inline-block;
-            text-align: left;
-            font-size: 0.95rem;
+        .phone-date { text-align: center; color: #999; font-size: 0.8rem; margin-bottom: 14px; }
+        .notif-card {
+            background: rgba(255,255,255,0.08); backdrop-filter: blur(20px);
+            border-radius: 14px; margin: 0 12px 8px; padding: 10px 12px;
+            display: flex; gap: 10px; align-items: flex-start;
+            border: 1px solid rgba(255,255,255,0.06);
         }
-        .lock-readout .v { color: #ff4444; font-weight: bold; }
-        .lock-readout .g { color: var(--color-terminal); }
-        .lock-note {
-            color: #666;
-            max-width: 480px;
-            line-height: 1.7;
-            font-style: italic;
-            margin: 4px auto 0;
+        .notif-app-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0;
         }
-        .lock-rule { color: #2a2a2a; letter-spacing: 2px; margin: 8px 0; }
+        .notif-body { flex: 1; min-width: 0; }
+        .notif-row { display: flex; justify-content: space-between; align-items: center; }
+        .notif-app-name { font-size: 0.68rem; color: #aaa; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .notif-ts { font-size: 0.65rem; color: #666; }
+        .notif-sender { font-size: 0.82rem; font-weight: 700; color: #fff; margin: 3px 0 2px; }
+        .notif-msg { font-size: 0.76rem; color: #aaa; line-height: 1.35; word-break: break-all; font-family: 'Courier Prime', monospace; }
+        .notif-msg .enc { color: #ff6b6b; }
+        .read-tick {
+            text-align: center; font-size: 0.65rem; color: #2a2a2a;
+            font-family: 'Courier Prime', monospace; letter-spacing: 1px; padding-top: 4px;
+        }
+
+        /* RE / Code challenge styles */
+        .re-container {
+            background: #050a06; border: 1px solid #1a3a1a; border-radius: 3px;
+            font-family: 'Courier Prime', monospace; overflow: hidden; margin-top: 16px;
+        }
+        .re-titlebar {
+            background: #0d1a0d; border-bottom: 1px solid #1a3a1a;
+            padding: 8px 16px; display: flex; align-items: center; gap: 10px;
+        }
+        .re-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .re-filename {
+            color: #4af626; font-size: 0.78rem; letter-spacing: 1px; margin-left: 4px;
+            opacity: 0.8;
+        }
+        .re-body { padding: 20px; }
+        .re-comment { color: #3a6b3a; }
+        .re-keyword { color: #569cd6; }
+        .re-string { color: #ce9178; }
+        .re-number { color: #b5cea8; }
+        .re-var { color: #9cdcfe; }
+        .re-fn { color: #dcdcaa; }
+        .re-code-line { line-height: 1.8; font-size: 0.9rem; white-space: pre; }
+        .re-hint-box {
+            background: #0d1a0d; border: 1px dashed #1a3a1a;
+            padding: 14px 16px; margin-top: 18px; color: #3d7a50; font-size: 0.82rem; line-height: 1.7;
+        }
+        .re-hint-box strong { color: #4af626; }
+        .re-hint-box code {
+            color: #4af626; background: rgba(74,246,38,0.06); padding: 1px 5px;
+        }
+        .re-input-wrap { margin-top: 20px; }
+        .re-input-label { color: #4af626; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+        .re-input {
+            width: 100%; background: #000; border: 1px solid #1a3a1a;
+            color: #4af626; font-family: 'Courier Prime', monospace; font-size: 1rem;
+            padding: 10px 14px; outline: none; letter-spacing: 2px;
+        }
+        .re-input:focus { border-color: #4af626; box-shadow: 0 0 0 1px rgba(74,246,38,0.15); }
+        .re-submit {
+            margin-top: 10px; background: transparent; border: 1px solid #4af626;
+            color: #4af626; font-family: 'Courier Prime', monospace; font-size: 0.85rem;
+            padding: 8px 20px; cursor: pointer; letter-spacing: 2px; transition: all 0.25s;
+        }
+        .re-submit:hover { background: rgba(74,246,38,0.1); }
+        .re-error { color: var(--color-blood); font-size: 0.82rem; margin-top: 8px; min-height: 18px; }
+        .re-success { color: #4af626; font-size: 0.85rem; margin-top: 8px; display: none; }
+
+        /* Message thread */
+        .thread-read { text-align: right; font-size: 0.68rem; color: #4af626;
+            opacity: 0.5; padding: 0 18px 4px; font-family: 'Courier Prime', monospace; }
     </style>
 </head>
 
 <body class="archive-body">
-    <div class="lock-wrap">
-        <h1 class="case-title stamp-effect" style="font-size: 1.6rem;">CASE #008 // CH.06</h1>
+    <div class="hidden-clue">she read it. she put the phone down. that was the whole crime.</div>
 
-        <div class="lock-glyph">&#128274;</div>
-        <p class="lock-sub">Subject file encrypted</p>
-        <h2 class="lock-name highlight-red">RHEA</h2>
-        <p class="lock-sub" style="color:#7a4a4a;">Sin: Despair</p>
+    <div id="caseboard-container">
+        <header class="case-header">
+            <h1 class="case-title stamp-effect">CASE #008 // CH.06</h1>
+            <div class="case-meta-grid">
+                <div class="meta-column">
+                    <span>Subject: <span class="highlight-red">RHEA SHARMA</span></span>
+                    <span>Status: <span class="highlight-green">OPEN</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Recovered from: <span class="highlight-terminal">MAYA VERMA'S LAPTOP</span></span>
+                    <span>Memory Integrity: <span class="highlight-red">03%</span></span>
+                </div>
+                <div class="meta-column">
+                    <span>Trigger: <span class="highlight-terminal">ONE MESSAGE. ONE NIGHT.</span></span>
+                    <span>Classification: <span class="highlight-red">[REDACTED]</span></span>
+                </div>
+            </div>
+        </header>
 
-        <p class="lock-rule">--------------------------------</p>
+        <h2 class="section-title">Recovered Files</h2>
 
-        <div class="lock-readout">
-            Status:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">LOCKED</span><br>
-            Memory Integrity:&nbsp;<span class="v">03%</span><br>
-            Decryption Key:&nbsp;&nbsp;&nbsp;<span class="v">NOT YET RECOVERED</span><br>
-            Fragments:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="g">5</span> / 7 collected
+        <div class="warning-message">
+            <strong>WARNING</strong><br>
+            A message was sent at 11:47 PM. It was read. It was not answered.<br>
+            The sender did not survive the night. Cassidy always encoded her darkest thoughts.<br>
+            The code is still here. <strong>Reverse-engineer it.</strong>
         </div>
 
-        <p class="lock-rule">--------------------------------</p>
+        <div class="evidence-grid">
+            <div class="evidence-item file-card" id="btn-diary9">
+                <span class="icon">&#128196;</span>
+                <div class="file-details">
+                    <span class="filename">Maya_Diary_009.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-phone">
+                <span class="icon">&#128241;</span>
+                <div class="file-details">
+                    <span class="filename">rhea_lockscreen.img</span>
+                    <span class="file-meta highlight-red">[NOTIFICATION VISIBLE]</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-thread">
+                <span class="icon">&#128172;</span>
+                <div class="file-details">
+                    <span class="filename">rhea_cass_thread.txt</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card corrupted" id="btn-script">
+                <span class="icon">&#128190;</span>
+                <div class="file-details">
+                    <span class="filename">grief_protocol.js</span>
+                    <span class="file-meta highlight-red">[OBFUSCATED]</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card encrypted" id="btn-rhea">
+                <span class="icon">&#128193;</span>
+                <div class="file-details">
+                    <span class="filename">Rhea</span>
+                    <span class="file-meta highlight-terminal">Encrypted</span>
+                </div>
+            </div>
+            <div class="evidence-item file-card" id="btn-note" style="display: none;">
+                <span class="icon">&#128221;</span>
+                <div class="file-details">
+                    <span class="filename">maya_note.txt</span>
+                </div>
+            </div>
+        </div>
 
-        <p class="lock-note">
-            The next subject is too unstable to open. Maya buried RHEA deeper than the
-            others &mdash; this file stays sealed until the recovery is ready.
-        </p>
-        <p class="lock-note" style="color:#444; margin-top:16px;">
-            WE &middot; ALL &middot; WATCHED &middot; HER &middot; DROWN &middot; <span style="color:#222;">______</span> &middot; <span style="color:#222;">______</span>
-        </p>
+        <div id="investigation-quiz" class="investigation-quiz">
+            <label for="investigation-input" class="quiz-label">Who sent Rhea the last message she ignored?</label>
+            <div class="input-row">
+                <input type="text" id="investigation-input" class="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="_">
+                <button id="submit-investigation" class="terminal-btn">SUBMIT</button>
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
 
-        <a href="caseboard.html" class="terminal-btn" style="margin-top: 34px; text-decoration: none; display: inline-block;">[ RETURN TO CASE BOARD ]</a>
+        <footer class="file-status-footer" id="case-footer">
+            <div style="display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%;">
+                <div class="status-box recovered">
+                    <span>RECOVERED FILES:</span>
+                    <span class="count" id="count-recovered">5</span>
+                </div>
+                <div class="status-box locked">
+                    <span style="color: var(--color-blood);">LOCKED FILES:</span>
+                    <span class="count" id="count-locked" style="color: var(--color-blood);">5</span>
+                </div>
+            </div>
+        </footer>
     </div>
+
+    <!-- Diary 009 -->
+    <div id="modal-diary9" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal">&times;</button>
+            <div class="diary-text">
+                <h3>December 01</h3>
+                <p>Cassidy reached out to Rhea that night.</p>
+                <p>Not through anyone else. Not cryptically.</p>
+                <p>One message, at 11:47 PM.</p>
+                <br>
+                <p>Rhea read it. The phone logged the read receipt.</p>
+                <p>She put the phone down and went to sleep.</p>
+                <br>
+                <p>By 4 AM, Cassidy was gone.</p>
+                <br>
+                <p>Rhea told the welfare office she didn't see it until morning.</p>
+                <p>The timestamp says otherwise.</p>
+                <br>
+                <p>Cassidy always scrambled her private messages with a script she wrote herself.</p>
+                <p><em>grief_protocol.js</em> — found still running on her laptop.</p>
+                <p>The output is what she meant to say.</p>
+                <p>The key she used was the name of the person she needed most.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phone lockscreen -->
+    <div id="modal-phone" class="modal">
+        <div class="modal-content" style="background:#0d0d0d; border-color:#1c1c1e; max-width:360px; width:90vw; padding:28px 18px;">
+            <button class="close-modal">&times;</button>
+            <div style="color:#3a3a3a; font-family:'Courier Prime',monospace; font-size:0.72rem; text-align:center; text-transform:uppercase; letter-spacing:2px; margin-bottom:14px;">rhea_lockscreen.img // recovered</div>
+            <div class="phone-shell">
+                <div class="phone-notch"><div class="phone-pill"></div></div>
+                <div style="display:flex; justify-content:space-between; padding:0 18px 4px; font-size:0.68rem; color:#666;">
+                    <span>11:47</span><span>&#9679;&#9679;&#9679;&#9659;</span>
+                </div>
+                <div class="phone-clock">11:47</div>
+                <div class="phone-date">Tuesday, December 1, 2025</div>
+                <div class="notif-card">
+                    <div class="notif-app-icon">&#128172;</div>
+                    <div class="notif-body">
+                        <div class="notif-row">
+                            <span class="notif-app-name">Messages</span>
+                            <span class="notif-ts">now</span>
+                        </div>
+                        <div class="notif-sender">Cass &#10084;</div>
+                        <div class="notif-msg"><span class="enc">0x61 0x77 0x63 0x60</span> 0x15 0x70&hellip;</div>
+                    </div>
+                </div>
+                <div class="read-tick">&#10003;&#10003; Read &nbsp; 11:47 PM</div>
+            </div>
+            <p style="margin-top:14px; color:#333; font-family:'Courier Prime',monospace; font-size:0.78rem; text-align:center; line-height:1.6;">
+                The first four bytes of the message are encoded.<br>
+                <span style="color:#222;">Open <em>grief_protocol.js</em> to decode them.</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Rhea ↔ Cass thread -->
+    <div id="modal-thread" class="modal">
+        <div class="modal-content chat-content instagram-dm" style="max-width:440px; width:92vw;">
+            <button class="close-modal">&times;</button>
+            <div class="dm-header">
+                <div class="dm-avatar" style="background:linear-gradient(135deg,#25d366,#128c7e);"></div>
+                <div class="dm-info">
+                    <h2>Cass &#10084;</h2>
+                    <span class="dm-status">last active Dec 1 · 11:49 PM</span>
+                </div>
+            </div>
+            <div class="chat-log dm-log">
+                <div class="dm-bubble received"><span class="text">you've been so distant lately</span></div>
+                <div class="dm-bubble sent"><span class="text">i'm just tired. a lot going on.</span></div>
+                <div class="dm-bubble received"><span class="text">i feel invisible when i'm around you</span></div>
+                <div class="dm-bubble sent"><span class="text">don't do this tonight cass</span></div>
+                <div class="dm-bubble received"><span class="text">you make me feel like i'm invisible. like nothing i say matters.</span></div>
+                <div class="dm-bubble received"><span class="text">like i'm shouting into a wall</span></div>
+                <div class="dm-bubble sent"><span class="text">i'm exhausted. can we talk tomorrow</span></div>
+                <div class="dm-bubble received"><span class="text">tomorrow won't work</span></div>
+                <div class="dm-bubble received" style="border: 1px solid rgba(255,80,80,0.2); background:rgba(138,3,3,0.12);">
+                    <span class="text" style="color:#ffaaaa; font-family:'Courier Prime',monospace; font-size:0.82rem; word-break:break-all; letter-spacing:1px;">
+                        0x61 0x77 0x63 0x60 0x15 0x70 0x71 0x14 0x72 0x73 0x68 0x14 0x7a 0x1f 0x76 0x7f 0x7e 0x7b
+                    </span>
+                </div>
+            </div>
+            <div class="thread-read">&#10003;&#10003;&nbsp; Read &middot; 11:47 PM</div>
+        </div>
+    </div>
+
+    <!-- grief_protocol.js — REVERSE ENGINEERING CHALLENGE -->
+    <div id="modal-script" class="modal">
+        <div class="modal-content osint-content" style="max-width:860px; width:95vw; background:#050a06; border-color:#1a3a1a; padding:28px;">
+            <button class="close-modal" style="color:#3a6b3a;">&times;</button>
+
+            <div style="color:#3a6b3a; font-family:'Courier Prime',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:2px; margin-bottom:14px;">
+                &#9654; CTF CATEGORY: REVERSE ENGINEERING
+            </div>
+
+            <div class="warning-message" style="border-color:#1a3a1a; background:rgba(74,246,38,0.04); color:#9fe89f;">
+                Cassidy's minified encoding script &mdash; found still running on her laptop at 11:47 PM, December 1.<br>
+                <strong>Reverse-engineer the obfuscated code. Find what <code style="color:#4af626">window._cass</code> evaluates to.</strong><br>
+                <span style="color:#3d7a50; font-size:0.82rem;">Paste the code block into DevTools and run it, or trace every stage manually. There are TWO decode stages.</span>
+            </div>
+
+            <div class="re-container">
+                <div class="re-titlebar">
+                    <div class="re-dot" style="background:#ff5f57;"></div>
+                    <div class="re-dot" style="background:#febc2e;"></div>
+                    <div class="re-dot" style="background:#28c840;"></div>
+                    <span class="re-filename">grief_protocol.min.js &nbsp;&#8212;&nbsp; 2025-12-01 23:47:02</span>
+                </div>
+                <div class="re-body">
+<pre class="re-code-line"><span class="re-comment">// grief_protocol.min.js — Cassidy Park</span>
+<span class="re-comment">// "if you know the process you know the answer" — C.P.</span>
+</pre>
+<pre class="re-code-line">
+<span class="re-comment">// decoy pool — not all of these are relevant</span>
+<span class="re-keyword">var</span> <span class="re-var">_0x3a1</span> = [<span class="re-string">'V0tEVw=='</span>, <span class="re-string">'cGFzc3dvcmQ='</span>, <span class="re-string">'RVJST1I='</span>, <span class="re-string">'a2V5'</span>];
+
+<span class="re-comment">// stage-1 key derivation</span>
+<span class="re-keyword">var</span> <span class="re-var">_0x3d2</span> = [<span class="re-number">0x37</span>, <span class="re-number">0x3d</span>, <span class="re-number">0x28</span>, <span class="re-number">0x38</span>];
+<span class="re-keyword">var</span> <span class="re-fn">_0x1a9</span> = <span class="re-keyword">function</span>(<span class="re-var">_a</span>, <span class="re-var">_n</span>) {
+    <span class="re-keyword">return</span> <span class="re-var">_a</span>.<span class="re-fn">map</span>(<span class="re-keyword">function</span>(<span class="re-var">_v</span>) { <span class="re-keyword">return</span> <span class="re-var">_v</span> - <span class="re-var">_n</span>; });
+};
+<span class="re-keyword">var</span> <span class="re-var">_0x5fc</span> = <span class="re-fn">_0x1a9</span>(<span class="re-var">_0x3d2</span>, <span class="re-fn">~~</span>(<span class="re-number">1</span>));
+
+<span class="re-comment">// stage-1 encoded payload</span>
+<span class="re-keyword">var</span> <span class="re-var">_0x9b4</span> = [<span class="re-number">0x61</span>, <span class="re-number">0x77</span>, <span class="re-number">0x63</span>, <span class="re-number">0x60</span>];
+<span class="re-keyword">var</span> <span class="re-var">_0x2e1</span> = <span class="re-var">_0x9b4</span>.<span class="re-fn">map</span>(<span class="re-keyword">function</span>(<span class="re-var">_b</span>, <span class="re-var">_i</span>) {
+    <span class="re-keyword">return</span> <span class="re-var">_b</span> ^ <span class="re-var">_0x5fc</span>[<span class="re-var">_i</span> % <span class="re-var">_0x5fc</span>.length];
+});
+
+<span class="re-comment">// stage-2 character transform</span>
+<span class="re-keyword">var</span> <span class="re-var">_0x4a7</span> = -(<span class="re-fn">~~</span>(<span class="re-number">6</span> / <span class="re-number">2</span>));
+<span class="re-var">window</span>.<span class="re-var">_cass</span> = <span class="re-var">_0x2e1</span>.<span class="re-fn">map</span>(<span class="re-keyword">function</span>(<span class="re-var">_c</span>) {
+    <span class="re-keyword">return</span> <span class="re-fn">String</span>.<span class="re-fn">fromCharCode</span>(<span class="re-var">_c</span> + <span class="re-var">_0x4a7</span>);
+}).<span class="re-fn">join</span>(<span class="re-string">''</span>);
+
+<span class="re-comment">// &gt; window._cass</span></pre>
+                </div>
+            </div>
+
+            <div class="re-hint-box">
+                <strong>Stage 1 &mdash; Key derivation:</strong> <code>_0x3d2</code> is a seed array. <code>_0x1a9(arr, n)</code> maps <code>v - n</code> over the array. <code>~~(1)</code> is a bitwise floor of 1. Compute <code>_0x5fc</code>.<br>
+                <strong>Stage 1 &mdash; XOR:</strong> each byte of <code>_0x9b4</code> is XORed with the derived key (cycling) to produce <code>_0x2e1</code> — an intermediate value. It is NOT the answer yet.<br>
+                <strong>Stage 2 &mdash; Character shift:</strong> <code>_0x4a7</code> is a negative integer. Each intermediate value has <code>_0x4a7</code> added before <code>String.fromCharCode</code>. <code>~~(6/2)</code> evaluates to what?<br>
+                <br>
+                <span style="color:#2a5c38;">The decoy pool <code>_0x3a1</code> contains base64 strings. They are not part of the computation path for <code>window._cass</code>.</span>
+            </div>
+
+            <div class="re-input-wrap">
+                <label class="re-input-label" for="re-answer-input">// window._cass =</label>
+                <input type="text" id="re-answer-input" class="re-input" placeholder="paste decoded output" autocomplete="off" spellcheck="false" maxlength="30">
+                <div id="re-error" class="re-error"></div>
+                <button class="re-submit" id="re-submit-btn">[ EXECUTE DECODE ]</button>
+                <div id="re-success" class="re-success">&#10003; DECRYPTION CONFIRMED &mdash; output logged.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rhea folder (encrypted) -->
+    <div id="modal-rhea" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/Rhea/</h2>
+            </div>
+            <div class="explorer-grid">
+                <div class="explorer-item" id="btn-rhea-dm">
+                    <span class="icon">&#128172;</span>
+                    <span class="filename">Messages (Cass)</span>
+                </div>
+                <div class="explorer-item" id="btn-vault">
+                    <span class="icon">&#128230;</span>
+                    <span class="filename">silence.zip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vault key -->
+    <div id="modal-vault-key" class="modal">
+        <div class="modal-content password-prompt-content fullscreen-prompt">
+            <button class="close-modal">&times;</button>
+            <h2 class="confidential-title">silence.zip</h2>
+            <div style="margin: 20px 0; color: #666; font-family: var(--font-typewriter); font-size: 0.9rem; max-width:600px; text-align:center;">
+                SYS_NOTE: DECRYPT KEY = <strong style="color:#888;">the word Cass said Rhea made her feel</strong><br>
+                <span style="color:#555; font-size:0.8rem;">Hint: she said it twice. In the thread.</span>
+            </div>
+            <div class="password-input-wrapper">
+                <input type="text" id="vault-input" autocomplete="off" spellcheck="false"
+                    placeholder="ENTER KEY">
+                <button id="vault-submit-btn">UNLOCK</button>
+            </div>
+            <div id="vault-error"></div>
+        </div>
+    </div>
+
+    <!-- Vault contents -->
+    <div id="modal-vault-contents" class="modal">
+        <div class="modal-content fcrack-content">
+            <button class="close-modal">&times;</button>
+            <div class="folder-header">
+                <h2>/silence/</h2>
+            </div>
+            <div class="fcrack-grid">
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content"
+                        style="background:#fff; color:#000; font-family:'Times New Roman', serif; font-size:0.86rem;">
+                        <strong style="font-size:1.05rem; border-bottom:2px solid #000; display:block; padding-bottom:5px; margin-bottom:10px;">STUDENT WELFARE — INCIDENT REPORT</strong>
+                        Date: 02 December 2025 &nbsp;&bull;&nbsp; Time: approx. 04:00<br>
+                        Subject: Cassidy Park (2nd year, Psychology)<br>
+                        Last outbound message: 11:47 PM &rarr; R. Sharma<br><br>
+                        <span style="color:#a00;">Status: Deceased. Manner: self-inflicted.</span><br><br>
+                        Note: Read receipt confirmed on recipient device at 11:47 PM. No response sent.
+                    </div>
+                    <span class="filename">welfare_report.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#111; border:1px solid #333; font-size:0.9rem;">
+                        <span style="color:#ff5555; font-size:0.7rem; display:block; margin-bottom:12px;">RHEA'S STATEMENT</span>
+                        "I didn't see it until the morning."<br><br>
+                        "I had no idea she was in that kind of state."<br><br>
+                        "We hadn't spoken properly in weeks."<br><br>
+                        <span style="color:#555;">Note: phone log reviewed. Read receipt: 11:47 PM, Dec 1. Statement inconsistent.</span>
+                    </div>
+                    <span class="filename">rhea_statement.txt</span>
+                </div>
+
+                <div class="fcrack-file txt-file">
+                    <div class="txt-content" style="background:#0d0d0d; border:1px solid #333; color:#888; font-family:monospace;">
+                        i keep thinking about what it feels like<br>
+                        to watch your message go blue<br><br>
+                        and then.<br><br>
+                        nothing.<br><br>
+                        the silence that comes back is a kind of answer.<br><br>
+                        <span style="color:#9fe89f;">- Maya, unsent</span>
+                    </div>
+                    <span class="filename">unsent_note.txt</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- maya_note (revealed after Q1) -->
+    <div id="modal-note" class="modal">
+        <div class="modal-content diary-content">
+            <button class="close-modal" id="note-close-btn">&times;</button>
+            <div class="diary-text">
+                <h3>maya_note.txt</h3>
+                <p style="color:#8a0303;">Maya:</p>
+                <p>Cass wrote her last message in code. She always did when she was at her worst.</p>
+                <p>Open <strong>grief_protocol.js</strong>. Reverse the function. Read what she needed.</p>
+                <br>
+                <p>The script encodes using XOR — <em>b ^ mask[i % mask.length]</em>.</p>
+                <p>The mask is given. The data is given. Run it in your console. Or trace it by hand.</p>
+                <br>
+                <p>Then tell me: what word did we all watch Rhea choose instead?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Despair summary -->
+    <div id="modal-summary" class="modal" style="z-index: 10000;">
+        <div class="modal-content"
+            style="background:#000; border:1px solid var(--color-blood); max-width:600px; padding:40px; text-align:left; font-family:var(--font-typewriter); color:#fff;">
+            <button class="close-modal" id="summary-close-btn">&times;</button>
+            <h2 style="color:var(--color-blood); border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">SUBJECT: RHEA SHARMA</h2>
+            <h3 style="color:#888; margin-bottom:30px;">CLASSIFICATION: DESPAIR</h3>
+            <div style="font-size:1.1rem; line-height:1.8;">
+                <span style="color:#555; text-transform:uppercase;">Findings:</span><br><br>
+                &gt; A message read at 11:47 PM. No reply sent.<br>
+                &gt; Cassidy Park found deceased at 4:00 AM, December 2.<br>
+                &gt; Rhea's statement contradicted by read receipt.<br>
+                <br>
+                <span style="color:var(--color-terminal);">&gt; She chose silence. The cost of doing nothing was a life.</span>
+            </div>
+            <div id="case-confirm-btn"
+                style="margin-top:40px; text-align:center; border:1px solid var(--color-blood); color:var(--color-blood); padding:10px; font-weight:bold; letter-spacing:2px; cursor:pointer; transition:all 0.3s;"
+                onmouseover="this.style.background='var(--color-blood)'; this.style.color='#000';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--color-blood)';">
+                CASE CONFIRMED
+            </div>
+        </div>
+    </div>
+
+    <div id="end-chapter-overlay" class="screen cut-screen" style="display:none; z-index: 20000;">
+        <div id="sequence-text" class="terminal-sequence"></div>
+    </div>
+
+    <script src="notify-client.js"></script>
+    <script src="chapter6.js"></script>
 </body>
 
 </html>
